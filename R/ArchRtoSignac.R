@@ -1,12 +1,12 @@
-#' getpm
+#' getPeakMatrix
 #'
 #' This function gets fixed-width peak matrix from ArchR project and change the row names of peak matrix to their matched chromosome range
 #'
 #' @param ArchRProject A ArchRProject
 #' @export
 #' @examples
-#' pm <- getpm(proj)
-getpm <- function(
+#' pm <- getPeakMatrix(proj)
+getPeakMatrix <- function(
   ArchRProject = NULL
 ){
   print("In Progress:")
@@ -128,7 +128,7 @@ ArchR2Signac <- function(
 
 }
 
-#' getgsm
+#' getGeneScoreMatrix
 #'
 #' This function gets gene score matrix from ArchR project and change the row names of gene score matrix to their matched gene features
 #'
@@ -136,8 +136,8 @@ ArchR2Signac <- function(
 #' @param SeuratObject A Seurat object
 #' @export
 #' @examples
-#' gsm <- getgsm(ArchRProject = proj, SeuratObject = seurat_atac)
-getgsm <- function(
+#' gsm <- getGeneScoreMatrix(ArchRProject = proj, SeuratObject = seurat_atac)
+getGeneScoreMatrix <- function(
   ArchRProject = NULL,
   SeuratObject = NULL
 ){

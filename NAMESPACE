@@ -3,5 +3,5 @@
 export(ArchR2Signac)
 export(addDimRed)
 export(getAnnotation)
-export(getgsm)
-export(getpm)
+export(getGeneScoreMatrix)
+export(getPeakMatrix)
