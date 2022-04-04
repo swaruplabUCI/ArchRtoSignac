@@ -1,8 +1,3 @@
-.onLoad <- function(ArchRtoSignac){
-    msg <- paste("Loading ArchRtoSignac, please install the following library dependencies: ArchR (v1.0.1 or above), Seurat (v4.1.0 or above), Signac (v1.5.0 or above), and stringr (v1.4.0 or above)")
-    cat(msg) 
-}
-
 #' getPeakMatrix
 #'
 #' This function gets fixed-width peak matrix from ArchR project and change the row names of peak matrix to their matched chromosome range
