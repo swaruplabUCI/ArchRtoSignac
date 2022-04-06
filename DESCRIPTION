@@ -5,6 +5,14 @@ Authors@R:
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: ArchRtoSignac is an R package performing object conversion from ArchRProject (ArchR) to Signac SeuratObject (Signac).
+Imports:
+    BiocManager,
+    devtools,
+    biovizBase,
+    ArchR (>= 1.0.1),
+    Seurat (>= 4.1.0),
+    Signac (>= 1.5.0),
+    stringr
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
