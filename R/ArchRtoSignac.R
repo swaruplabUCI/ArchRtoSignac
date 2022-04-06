@@ -2,7 +2,7 @@
 #'
 #' This function a quick way to check if required packages for ArchRtoSignac package are installed and load those available packages automatically.
 #'
-#' @param packages_x Libraries required for the use of ArchRtoSignac
+#' @param packages_x Libraries required for the use of ArchRtoSignac, most dependencies should be installed when installing ArchRtoSignac
 #' @export
 #' @examples
 #' loadinglibrary(dependencies)
