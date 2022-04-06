@@ -4,7 +4,7 @@
 
 ArchRtoSignac is an R package for performing object conversion from ArchRProject [(ArchR)](https://www.archrproject.com/index.html) to Signac SeuratObject [(Signac)](https://satijalab.org/signac/index.html).
 
-ArchR and Signac are both commonly used scATAC-seq analysis packages with a comparable set of features and under development, which means they are likely to change over time. Researchers are welcome to stay only with Signac or ArchR pipeline during the whole analyzing process. But for the time being, Swarup lab would like to provide an option to help with data formatting from ArchRProject to Signac SeuratObject. ArchRtoSignac is a wrapper function utilizing existing ArchR and Seurat functions for an easier implementation.
+ArchR and Signac are both commonly used scATAC-seq analysis packages with a comparable set of features and under development, which means they are likely to change over time. Researchers are welcome to stay only with Signac or ArchR pipeline during the whole analyzing process. But for the time being, we would like to provide an option to help with data formatting from ArchRProject to Signac SeuratObject. ArchRtoSignac is a wrapper function utilizing existing ArchR and Seurat functions for an easier implementation.
 The functions mentioned in this protocol, by all means, are only here for additional support if researchers want to use a fixed-width peak matrix for its advantage in computation, but work with Signac or want to access additional functions, packages, or resources than the ones provided in ArchR.
 
 
