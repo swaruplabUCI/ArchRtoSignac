@@ -1,3 +1,27 @@
+#' loadinglibrary
+#'
+#' This function a quick way to check if required packages for ArchRtoSignac package are installed and load those available packages automatically.
+#'
+#' @param packages_x Libraries required for the use of ArchRtoSignac
+#' @export
+#' @examples
+#' loadinglibrary(dependencies)
+loadinglibrary <- function(
+  packages_x = NULL
+) {
+  for (i in 1:length(packages_x)) {
+    loading_package <- packages_x[i]
+    if (!require(loading_package, character.only = TRUE)) {
+      print(paste("Package", loading_package, 'not found. Please Installing Package!'))
+    }
+    else {
+      print(paste0("Loading Package: ", loading_package))
+      suppressPackageStartupMessages(library(loading_package, character.only = TRUE))
+      print(paste0("Package: ", loading_package, " -- Loaded Successfully"))
+    }
+  }
+}
+
 #' getPeakMatrix
 #'
 #' This function gets fixed-width peak matrix from ArchR project and change the row names of peak matrix to their matched chromosome range
