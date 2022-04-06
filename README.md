@@ -28,17 +28,24 @@ Next, open up R and install the required dependencies:
 * [Seurat](https://satijalab.org/seurat/index.html), a general-purpose toolkit for single-cell RNA sequencing analysis.
 * [Signac](https://satijalab.org/signac/index.html), a general-purpose toolkit for single-cell ATAC sequencing analysis.
 * [devtools](https://devtools.r-lib.org/), a package for package development in R.
+* [biovizBase](https://www.bioconductor.org/packages/release/bioc/html/biovizBase.html), a basic graphic utilities for visualization of genomic data in R.
 * [stringr](https://cran.r-project.org/web/packages/stringr/readme/README.html), a package for data cleaning and preparation in R.
 
 ```r
-# install BiocManager
-install.packages("BiocManager")
+# install devtools and BiocManager
+if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 
 # install Bioconductor core packages
 BiocManager::install()
 
-# install additional packages:
-install.packages(c("ArchR","Signac","Seurat","devtools","stringr"))
+# install additional packages including ArchR, Signac Seurat and etc:
+if (!requireNamespace("biovizBase", quietly = TRUE)) BiocManager::install("biovizBase")
+if (!requireNamespace("ArchR", quietly = TRUE)) devtools::install_github("GreenleafLab/ArchR", ref="master", repos = BiocManager::repositories())
+if (!requireNamespace("Signac", quietly = TRUE)) install.packages("Signac")
+if (!requireNamespace("Seurat", quietly = TRUE)) install.packages("Seurat")
+if (!requireNamespace("stringr", quietly = TRUE)) install.packages("stringr")
+
 
 ```
 
