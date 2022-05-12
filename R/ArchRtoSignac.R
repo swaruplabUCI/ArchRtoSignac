@@ -1,18 +1,18 @@
 #' loadinglibrary
 #'
-#' This function a quick way to check if required packages for ArchRtoSignac package are installed and load those available packages automatically.
+#' This function is a quick way to check if the required packages for ArchRtoSignac package are installed. If the packages are available, they are loaded automatically.
 #'
-#' @param packages_x Libraries required for the use of ArchRtoSignac, most dependencies should be installed when installing ArchRtoSignac
+#' @param packages Vector of libraries required for ArchRtoSignac (most dependencies should be installed when installing ArchRtoSignac)
 #' @export
 #' @examples
 #' loadinglibrary(dependencies)
 loadinglibrary <- function(
-  packages_x = NULL
+  packages
 ) {
-  for (i in 1:length(packages_x)) {
-    loading_package <- packages_x[i]
+  for (i in 1:length(packages)) {
+    loading_package <- packages[i]
     if (!require(loading_package, character.only = TRUE)) {
-      print(paste("Package", loading_package, 'not found. Please Installing Package!'))
+      print(paste("Package", loading_package, 'not found. Please Install the Package!!'))
     }
     else {
       print(paste0("Loading Package: ", loading_package))
@@ -24,17 +24,17 @@ loadinglibrary <- function(
 
 #' getPeakMatrix
 #'
-#' This function gets fixed-width peak matrix from ArchR project and change the row names of peak matrix to their matched chromosome range
+#' This function gets the fixed-width peak matrix from the ArchRProject and changes the row names of the peak matrix to their matched chromosome range.
 #'
-#' @param ArchRProject A ArchRProject
+#' @param ArchRProject An ArchRProject
 #' @export
 #' @examples
 #' pm <- getPeakMatrix(proj)
 getPeakMatrix <- function(
-  ArchRProject = NULL
+  ArchRProject
 ){
   print("In Progress:")
-  print("get Matrix From ArchRProject")
+  print("Get Matrix From ArchRProject")
   peak_matrix <- ArchR::getMatrixFromProject(ArchRProject, useMatrix='PeakMatrix')
   pm <- assays(peak_matrix)$PeakMatrix # peaks sparse martix
   rownames(pm) <- paste0(as.character(seqnames(ArchRProject@peakSet)), '-', as.character(start(ArchRProject@peakSet)), '-', as.character(end(ArchRProject@peakSet)))
@@ -45,20 +45,20 @@ getPeakMatrix <- function(
 
 #' getAnnotation
 #'
-#' This function gets the gene annotation from Ensembl Database in GRanges Object for the Seurat object, which includes information related to genomic locations and their associated annotations
-#' Then it changes the annotation to the UCSC style and hg38, since Cellranger ATAC count input FastQ files were mapped to GRCh38.
+#' This function gets the gene annotation, which includes information related to genomic locations and their associated annotations, from Ensembl Database in GRanges Object for the Seurat object.
+#' Then it changes the annotation to the UCSC style (default).
 #'
-#' @param reference An Ensembl genome reference used for function GetGRangesFromEnsDb to extract gene annotations from EnsDb, for example: EnsDb.Hsapiens.v86
-#' @param seqStyle A default sequence style changes the annotation extracted from EnsDb to ‘UCSC’ since Signac maps to hg38
-#' @param refversion The assembly release and versions of UCSC genome reference
+#' @param reference An Ensembl genome reference used for the Signac function GetGRangesFromEnsDb to extract gene annotations from EnsDb (for example: EnsDb.Hsapiens.v86)
+#' @param seqStyle Sequence style to change the annotation extracted from EnsDb to (default is ‘UCSC’)
+#' @param refversion The assembly release and versions of UCSC genome reference (for example: 'hg38')
 #' @export
 #' @examples
 #' annotations <- getAnnotation(reference = EnsDb.Hsapiens.v86, seqStyle = 'UCSC', refversion = 'hg38')
 
 getAnnotation<- function(
-  reference = NULL, # GetGRangesFromEnsDb requires an EnsDb, for example: EnsDb.Hsapiens.v86
+  reference, # GetGRangesFromEnsDb requires an EnsDb, for example: EnsDb.Hsapiens.v86
   seqStyle = 'UCSC', # change to UCSC style
-  refversion = NULL # write the EnsDb version for example: 'hg38'
+  refversion # write the EnsDb version for example: 'hg38'
 ){
   print("In Progress:")
   print("Extract genomic ranges from EnsDb object and prepare annotation")
@@ -80,32 +80,31 @@ getAnnotation<- function(
 
 #' ArchR2Signac
 #'
-#' This function converts the ArchRProject to SeuratObject by creating a list of seurat objects for each sample with their corresponding peak matrix and then merge objects from each sample in the list created using Swarup lab GitHub wrapper function
+#' This function converts the ArchRProject to a SeuratObject by creating a list of Seurat objects for each sample with their corresponding peak matrix and then merging all of the objects in the list.
 #'
-#' @param ArchRProject A ArchRProject
-#' @param reference A reference used for function GetGRangesFromEnsDb to extract gene annotations from EnsDb
-#' @param seqStyle A default seq style changes the annotation extracted to UCSC style since the ArchRProject was mapped to hg38
+#' @param ArchRProject An ArchRProject
 #' @param refversion The assembly release and versions of UCSC genome reference
-#' @param samples A unique sample List for all processed samples from ArchRProject
-#' @param fragments_dir A PATH to the cellranger output, the folder that contains all samples folders, not the one with '/outs/fragments.tsv.gz'.
-#' @param pm A peak matrix. getMatrixFromProject function extracts peak matrix from ArchRProject and it needs to be reformat into Signac style
-#' @param output_dir '/outs/' the PATH before 'fragments.tsv.gz'
-#' @param annotation annotation got from getAnnotation() for SeuratObject
+#' @param samples List of all the samples from the ArchRProject
+#' @param fragments_dir PATH to the cellranger-atac output--the folder that contains all samples folders, not the one with '/outs/fragments.tsv.gz'.
+#' @param pm Peak matrix (output) from the function getPeakMatrix
+#' @param output_dir PATH before 'fragments.tsv.gz' from cell-ranger-atac (typically this is '/outs/' and is the default)
+#' @param annotation annotation from the function getAnnotation()
 #' @export
 #' @examples
-#' seurat_atac <- ArchR2Signac(ArchRProject = proj1, samples = samples, fragments_dir = fragments_dir, pm = pm, output_dir = '/outs/', seqStyle = 'UCSC', refversion = 'hg38', reference = EnsDb.Hsapiens.v86, annotation = annotations)
+#' seurat_atac <- ArchR2Signac(ArchRProject = proj1, refversion = 'hg38', samples = samples, fragments_dir = fragments_dir, pm = pm, output_dir = '/outs/', annotation = annotations)
 
 ArchR2Signac <- function(
-  ArchRProject = NULL,
-  samples = "UniqueSampleList", # Provide a list of unique sample
-  fragments_dir = "PATHtoCellRangerOutput", # directory of the cellranger output, the folder that contains all samples
-  pm = pm, # geting peak martix
+  ArchRProject,
+  refversion, # write the EnsDb version
+  samples = NULL, # Provide a list of unique sample
+  fragments_dir = NULL, # directory of the cellranger output, the folder that contains all samples
+  pm, # geting peak martix
   output_dir = '/outs/',
-  seqStyle = 'UCSC',
-  refversion = 'hg38', # write the EnsDb version
-  reference = EnsDb.Hsapiens.v86, # choose the EnsDb as the reference
-  annotation = annotations # annotation from getAnnotation()
+  annotation # annotation from getAnnotation()
  ){
+   if (is.null(samples)){
+     samples <- unique(proj@cellColData$Sample)
+   }
    print("In Progress:")
    print("Prepare Seurat list for each sample")
    seurat_list <- lapply(samples, function(cur_sample){
@@ -154,19 +153,19 @@ ArchR2Signac <- function(
 
 #' getGeneScoreMatrix
 #'
-#' This function gets gene score matrix from ArchR project and change the row names of gene score matrix to their matched gene features
+#' This function gets the gene score matrix from an ArchRProject and changes the row names of gene score matrix to their matched gene features
 #'
-#' @param ArchRProject A ArchRProject
+#' @param ArchRProject An ArchRProject
 #' @param SeuratObject A Seurat object
 #' @export
 #' @examples
 #' gsm <- getGeneScoreMatrix(ArchRProject = proj, SeuratObject = seurat_atac)
 getGeneScoreMatrix <- function(
-  ArchRProject = NULL,
-  SeuratObject = NULL
+  ArchRProject,
+  SeuratObject
 ){
   print("In Progress:")
-  print("get Gene Score Matrix From ArchRProject")
+  print("Get Gene Score Matrix From ArchRProject")
   GeneScore_matrix <- ArchR::getMatrixFromProject(ArchRProject, useMatrix='GeneScoreMatrix')
   gsm <- assays(GeneScore_matrix)$GeneScoreMatrix # peaks sparse martix
   print("get Gene Features From ArchRProject")
@@ -190,17 +189,17 @@ getGeneScoreMatrix <- function(
 
 #' addDimRed
 #'
-#' This function adds dimension reduction, 'Harmony' or 'IterativeLSI' and UMAP to SeuratObject
+#' This function adds a dimension reduction (either 'Harmony' or 'IterativeLSI') and UMAP to a SeuratObject
 #'
-#' @param ArchRProject A ArchRProject
+#' @param ArchRProject An ArchRProject
 #' @param SeuratObject A Seurat object
-#' @param reducedDims A reduction dimension can be transfered from from ArchRProject to Signac SeuratObject
+#' @param reducedDims 'Harmony' or 'IterativeLSI', the dimension reduction to be transfered from ArchRProject to Signac SeuratObject (default is 'IterativeLSI')
 #' @export
 #' @examples
-#' seurat_atac <- addDimRed(ArchRProject = proj, SeuratObject = seurat_atac,reducedDims = 'IterativeLSI')
+#' seurat_atac <- addDimRed(ArchRProject = proj, SeuratObject = seurat_atac, reducedDims = 'IterativeLSI')
 addDimRed <- function(
-  ArchRProject = NULL,
-  SeuratObject = NULL,
+  ArchRProject,
+  SeuratObject,
   reducedDims = 'IterativeLSI'
 ){
   print("In Progress:")
