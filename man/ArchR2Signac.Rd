@@ -5,39 +5,33 @@
 \title{ArchR2Signac}
 \usage{
 ArchR2Signac(
-  ArchRProject = NULL,
-  samples = "UniqueSampleList",
-  fragments_dir = "PATHtoCellRangerOutput",
-  pm = pm,
+  ArchRProject,
+  refversion,
+  samples = NULL,
+  fragments_dir = NULL,
+  pm,
   output_dir = "/outs/",
-  seqStyle = "UCSC",
-  refversion = "hg38",
-  reference = EnsDb.Hsapiens.v86,
-  annotation = annotations
+  annotation
 )
 }
 \arguments{
-\item{ArchRProject}{A ArchRProject}
-
-\item{samples}{A unique sample List for all processed samples from ArchRProject}
-
-\item{fragments_dir}{A PATH to the cellranger output, the folder that contains all samples folders, not the one with '/outs/fragments.tsv.gz'.}
-
-\item{pm}{A peak matrix. getMatrixFromProject function extracts peak matrix from ArchRProject and it needs to be reformat into Signac style}
-
-\item{output_dir}{'/outs/' the PATH before 'fragments.tsv.gz'}
-
-\item{seqStyle}{A default seq style changes the annotation extracted to UCSC style since the ArchRProject was mapped to hg38}
+\item{ArchRProject}{An ArchRProject}
 
 \item{refversion}{The assembly release and versions of UCSC genome reference}
 
-\item{reference}{A reference used for function GetGRangesFromEnsDb to extract gene annotations from EnsDb}
+\item{samples}{List of all the samples from the ArchRProject}
 
-\item{annotation}{annotation got from getAnnotation() for SeuratObject}
+\item{fragments_dir}{PATH to the cellranger-atac output--the folder that contains all samples folders, not the one with '/outs/fragments.tsv.gz'.}
+
+\item{pm}{Peak matrix (output) from the function getPeakMatrix}
+
+\item{output_dir}{PATH before 'fragments.tsv.gz' from cell-ranger-atac (typically this is '/outs/' and is the default)}
+
+\item{annotation}{annotation from the function getAnnotation()}
 }
 \description{
-This function converts the ArchRProject to SeuratObject by creating a list of seurat objects for each sample with their corresponding peak matrix and then merge objects from each sample in the list created using Swarup lab GitHub wrapper function
+This function converts the ArchRProject to a SeuratObject by creating a list of Seurat objects for each sample with their corresponding peak matrix and then merging all of the objects in the list.
 }
 \examples{
-seurat_atac <- ArchR2Signac(ArchRProject = proj1, samples = samples, fragments_dir = fragments_dir, pm = pm, output_dir = '/outs/', seqStyle = 'UCSC', refversion = 'hg38', reference = EnsDb.Hsapiens.v86, annotation = annotations)
+seurat_atac <- ArchR2Signac(ArchRProject = proj1, refversion = 'hg38', samples = samples, fragments_dir = fragments_dir, pm = pm, output_dir = '/outs/', annotation = annotations)
 }

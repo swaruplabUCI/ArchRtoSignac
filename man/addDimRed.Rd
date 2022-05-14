@@ -4,22 +4,18 @@
 \alias{addDimRed}
 \title{addDimRed}
 \usage{
-addDimRed(
-  ArchRProject = NULL,
-  SeuratObject = NULL,
-  reducedDims = "IterativeLSI"
-)
+addDimRed(ArchRProject, SeuratObject, reducedDims = "IterativeLSI")
 }
 \arguments{
-\item{ArchRProject}{A ArchRProject}
+\item{ArchRProject}{An ArchRProject}
 
 \item{SeuratObject}{A Seurat object}
 
-\item{reducedDims}{A reduction dimension can be transfered from from ArchRProject to Signac SeuratObject}
+\item{reducedDims}{'Harmony' or 'IterativeLSI', the dimension reduction to be transfered from ArchRProject to Signac SeuratObject (default is 'IterativeLSI')}
 }
 \description{
-This function adds dimension reduction, 'Harmony' or 'IterativeLSI' and UMAP to SeuratObject
+This function adds a dimension reduction (either 'Harmony' or 'IterativeLSI') and UMAP to a SeuratObject
 }
 \examples{
-seurat_atac <- addDimRed(ArchRProject = proj, SeuratObject = seurat_atac,reducedDims = 'IterativeLSI')
+seurat_atac <- addDimRed(ArchRProject = proj, SeuratObject = seurat_atac, reducedDims = 'IterativeLSI')
 }

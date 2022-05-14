@@ -4,13 +4,13 @@
 \alias{loadinglibrary}
 \title{loadinglibrary}
 \usage{
-loadinglibrary(packages_x = NULL)
+loadinglibrary(packages)
 }
 \arguments{
-\item{packages_x}{Libraries required for the use of ArchRtoSignac}
+\item{packages}{Vector of libraries required for ArchRtoSignac (most dependencies should be installed when installing ArchRtoSignac)}
 }
 \description{
-This function a quick way to check if required packages for ArchRtoSignac package are installed and load those available packages automatically.
+This function is a quick way to check if the required packages for ArchRtoSignac package are installed. If the packages are available, they are loaded automatically.
 }
 \examples{
 loadinglibrary(dependencies)

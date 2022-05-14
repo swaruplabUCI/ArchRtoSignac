@@ -4,18 +4,18 @@
 \alias{getAnnotation}
 \title{getAnnotation}
 \usage{
-getAnnotation(reference = NULL, seqStyle = "UCSC", refversion = NULL)
+getAnnotation(reference, seqStyle = "UCSC", refversion)
 }
 \arguments{
-\item{reference}{An Ensembl genome reference used for function GetGRangesFromEnsDb to extract gene annotations from EnsDb, for example: EnsDb.Hsapiens.v86}
+\item{reference}{An Ensembl genome reference used for the Signac function GetGRangesFromEnsDb to extract gene annotations from EnsDb (for example: EnsDb.Hsapiens.v86)}
 
-\item{seqStyle}{A default sequence style changes the annotation extracted from EnsDb to ‘UCSC’ since Signac maps to hg38}
+\item{seqStyle}{Sequence style to change the annotation extracted from EnsDb to (default is ‘UCSC’)}
 
-\item{refversion}{The assembly release and versions of UCSC genome reference}
+\item{refversion}{The assembly release and versions of UCSC genome reference (for example: 'hg38')}
 }
 \description{
-This function gets the gene annotation from Ensembl Database in GRanges Object for the Seurat object, which includes information related to genomic locations and their associated annotations
-Then it changes the annotation to the UCSC style and hg38, since Cellranger ATAC count input FastQ files were mapped to GRCh38.
+This function gets the gene annotation, which includes information related to genomic locations and their associated annotations, from Ensembl Database in GRanges Object for the Seurat object.
+Then it changes the annotation to the UCSC style (default).
 }
 \examples{
 annotations <- getAnnotation(reference = EnsDb.Hsapiens.v86, seqStyle = 'UCSC', refversion = 'hg38')

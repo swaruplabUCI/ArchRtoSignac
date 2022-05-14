@@ -4,13 +4,13 @@
 \alias{getPeakMatrix}
 \title{getPeakMatrix}
 \usage{
-getPeakMatrix(ArchRProject = NULL)
+getPeakMatrix(ArchRProject)
 }
 \arguments{
-\item{ArchRProject}{A ArchRProject}
+\item{ArchRProject}{An ArchRProject}
 }
 \description{
-This function gets fixed-width peak matrix from ArchR project and change the row names of peak matrix to their matched chromosome range
+This function gets the fixed-width peak matrix from the ArchRProject and changes the row names of the peak matrix to their matched chromosome range.
 }
 \examples{
 pm <- getPeakMatrix(proj)

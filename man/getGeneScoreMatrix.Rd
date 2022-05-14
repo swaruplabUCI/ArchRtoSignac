@@ -4,15 +4,15 @@
 \alias{getGeneScoreMatrix}
 \title{getGeneScoreMatrix}
 \usage{
-getGeneScoreMatrix(ArchRProject = NULL, SeuratObject = NULL)
+getGeneScoreMatrix(ArchRProject, SeuratObject)
 }
 \arguments{
-\item{ArchRProject}{A ArchRProject}
+\item{ArchRProject}{An ArchRProject}
 
 \item{SeuratObject}{A Seurat object}
 }
 \description{
-This function gets gene score matrix from ArchR project and change the row names of gene score matrix to their matched gene features
+This function gets the gene score matrix from an ArchRProject and changes the row names of gene score matrix to their matched gene features
 }
 \examples{
 gsm <- getGeneScoreMatrix(ArchRProject = proj, SeuratObject = seurat_atac)
