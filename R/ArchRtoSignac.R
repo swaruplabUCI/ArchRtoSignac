@@ -233,7 +233,30 @@ addDimRed <- function(
         embeddings=LSI_matrix,
         assay="peaks"
     )
+  } else if(reducedDims == c('IterativeLSI', 'Harmony') | reducedDims == c('Harmony', 'IterativeLSI')){
+
+    print("In Progress: add IterativeLSI From ArchRProject to SeuratObject")
+    LSI_matrix <- ArchRProject@reducedDims$IterativeLSI$matSVD
+    rownames(LSI_matrix) <- colnames(SeuratObject)
+    colnames(LSI_matrix) <- paste0('LSI_', 1:ncol(LSI_matrix))
+
+    SeuratObject@reductions$IterativeLSI <- Seurat::CreateDimReducObject(
+        embeddings=LSI_matrix,
+        assay="peaks"
+    )
+
+    print("In Progress: add Harmony From ArchRProject to SeuratObject")
+    harmony_matrix <- ArchRProject@reducedDims$Harmony$matDR
+    rownames(harmony_matrix) <- colnames(SeuratObject)
+    colnames(harmony_matrix) <- paste0('LSI_', 1:ncol(harmony_matrix))
+
+    SeuratObject@reductions$harmony <- Seurat::CreateDimReducObject(
+        embeddings=harmony_matrix,
+        assay="peaks"
+    )
+
   }
+
 
   print("Return SeuratObject")
   SeuratObject
