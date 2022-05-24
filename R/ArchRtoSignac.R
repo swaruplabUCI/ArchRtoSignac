@@ -189,14 +189,14 @@ getGeneScoreMatrix <- function(
 
 #' addDimRed
 #'
-#' This function adds a dimension reduction (either 'Harmony' or 'IterativeLSI') and UMAP to a SeuratObject
+#' This function adds dimension reduction ('Harmony' and/or 'IterativeLSI') and UMAP to a SeuratObject
 #'
 #' @param ArchRProject An ArchRProject
 #' @param SeuratObject A Seurat object
-#' @param reducedDims 'Harmony' or 'IterativeLSI', the dimension reduction to be transfered from ArchRProject to Signac SeuratObject (default is 'IterativeLSI')
+#' @param reducedDims 'Harmony' and/or 'IterativeLSI', the dimension reduction to be transfered from ArchRProject to Signac SeuratObject (default is 'IterativeLSI')
 #' @export
 #' @examples
-#' seurat_atac <- addDimRed(ArchRProject = proj, SeuratObject = seurat_atac, reducedDims = 'IterativeLSI')
+#' seurat_atac <- addDimRed(ArchRProject = proj, SeuratObject = seurat_atac, reducedDims = 'IterativeLSI') #reducedDims == c('IterativeLSI', 'Harmony')
 addDimRed <- function(
   ArchRProject,
   SeuratObject,
