@@ -1,6 +1,7 @@
 
 # ArchRtoSignac : an Object Conversion Package for ArchR to Signac
 
+[![DOI](https://zenodo.org/badge/473458154.svg)](https://zenodo.org/badge/latestdoi/473458154)
 
 **ArchRtoSignac** is an R package to convert an ArchRProject [(ArchR)](https://www.archrproject.com/index.html) to a Signac SeuratObject [(Signac)](https://satijalab.org/signac/index.html).
 
