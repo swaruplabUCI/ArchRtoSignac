@@ -87,7 +87,8 @@ getAnnotation<- function(
 #' @param samples List of all the samples from the ArchRProject
 #' @param fragments_dir PATH to the cellranger-atac output--the folder that contains all samples folders, not the one with '/outs/fragments.tsv.gz'.
 #' @param pm Peak matrix (output) from the function getPeakMatrix
-#' @param output_dir PATH before 'fragments.tsv.gz' from cell-ranger-atac (typically this is '/outs/' and is the default)
+#' @param fragments_fromcellranger This is an Yes or No selection ("NO" | "N" | "No" or "YES" | "Y" | "Yes")
+#' @param fragments_file_extension File_Extension for fragments files (typically they should be '.tsv.gz' or ".fragments.tsv.gz)
 #' @param annotation annotation from the function getAnnotation()
 #' @export
 #' @examples
@@ -99,44 +100,92 @@ ArchR2Signac <- function(
   samples = NULL, # Provide a list of unique sample
   fragments_dir = NULL, # directory of the cellranger output, the folder that contains all samples
   pm, # geting peak martix
-  output_dir = '/outs/',
+  fragments_fromcellranger = NULL, # "NO" | "N" | "No" or "YES" | "Y" | "Yes"
+  fragments_file_extension = NULL, #  '.tsv.gz' or ".fragments.tsv.gz
+  # output_dir = '/outs/', # removal due to the input format for snapATAC, added when fragments_fromcellranger == "NO" | "N" | "No"
   annotation # annotation from getAnnotation()
  ){
    if (is.null(samples)){
      samples <- unique(proj@cellColData$Sample)
    }
-   print("In Progress:")
-   print("Prepare Seurat list for each sample")
-   seurat_list <- lapply(samples, function(cur_sample){
-     print(cur_sample)
-     #print out the sample name in progress
-     cur_fragments <- paste0(fragments_dir, cur_sample, output_dir, 'fragments.tsv.gz')
-     # seeking the pattern matched in colnames(pm); metadata of the corresponding sample
-     cur_pm <- pm[,grepl(paste0(cur_sample, '#'), colnames(pm))]
-     cur_meta <- ArchRProject@cellColData %>% as.data.frame %>% subset(Sample == cur_sample)
 
-     # change colnames and rowname format:
-     colnames(cur_pm) <- do.call(rbind, str_split(colnames(cur_pm), '#'))[,2]
-     rownames(cur_meta) <- do.call(rbind, str_split(rownames(cur_meta), '#'))[,2]
-     print(dim(cur_pm))
-     # create chromatin assay
-     cur_chromatin <- Signac::CreateChromatinAssay(
-       counts=cur_pm, # should we add data instead counts
-       sep = c('-', '-'),
-       fragments=cur_fragments, # do we need this?
-       ranges=ArchRProject@peakSet,
-       genome=refversion,
-       annotation = annotation
-     )
+   if(fragments_fromcellranger == "YES" | fragments_fromcellranger == "Y" | fragments_fromcellranger == "Yes") {
+     print("In Progress:")
+     print("Prepare Seurat list for each sample")
 
-     # create a new Seurat obj with only the archR peaks:
-     cur_atac <- Seurat::CreateSeuratObject(
-       cur_chromatin,
-       assay='peaks',
-       meta.data = cur_meta,
-     )
+     output_dir = '/outs/'
 
-   })
+     seurat_list <- lapply(samples, function(cur_sample){
+       print(cur_sample)
+       #print out the sample name in progress
+       cur_fragments <- paste0(fragments_dir, cur_sample, output_dir, 'fragments.tsv.gz')
+       # seeking the pattern matched in colnames(pm); metadata of the corresponding sample
+       cur_pm <- pm[,grepl(paste0(cur_sample, '#'), colnames(pm))]
+       cur_meta <- ArchRProject@cellColData %>% as.data.frame %>% subset(Sample == cur_sample)
+
+       # change colnames and rowname format:
+       colnames(cur_pm) <- do.call(rbind, str_split(colnames(cur_pm), '#'))[,2]
+       rownames(cur_meta) <- do.call(rbind, str_split(rownames(cur_meta), '#'))[,2]
+       print(dim(cur_pm))
+       # create chromatin assay
+       cur_chromatin <- Signac::CreateChromatinAssay(
+         counts=cur_pm, # should we add data instead counts
+         sep = c('-', '-'),
+         fragments=cur_fragments, # do we need this?
+         ranges=ArchRProject@peakSet,
+         genome=refversion,
+         annotation = annotation
+       )
+
+       # create a new Seurat obj with only the archR peaks:
+       cur_atac <- Seurat::CreateSeuratObject(
+         cur_chromatin,
+         assay='peaks',
+         meta.data = cur_meta,
+       )
+
+     })
+   }
+
+   if(fragments_fromcellranger == "NO" | fragments_fromcellranger == "N" | fragments_fromcellranger == "No") {
+
+     print("IF selecting NO, please make sure to provide fragments_file_extension")
+     print("In Progress:")
+     print("Prepare Seurat list for each sample")
+
+     seurat_list <- lapply(samples, function(cur_sample){
+       print(cur_sample)
+       #print out the sample name in progress
+       cur_fragments <- paste0(fragments_dir, cur_sample, fragments_file_extension)
+       # seeking the pattern matched in colnames(pm); metadata of the corresponding sample
+       cur_pm <- pm[,grepl(paste0(cur_sample, '#'), colnames(pm))]
+       cur_meta <- ArchRProject@cellColData %>% as.data.frame %>% subset(Sample == cur_sample)
+
+       # change colnames and rowname format:
+       colnames(cur_pm) <- do.call(rbind, str_split(colnames(cur_pm), '#'))[,2]
+       rownames(cur_meta) <- do.call(rbind, str_split(rownames(cur_meta), '#'))[,2]
+       print(dim(cur_pm))
+       # create chromatin assay
+       cur_chromatin <- Signac::CreateChromatinAssay(
+         counts=cur_pm, # should we add data instead counts
+         sep = c('-', '-'),
+         fragments=cur_fragments, # do we need this?
+         ranges=ArchRProject@peakSet,
+         genome=refversion,
+         annotation = annotation
+       )
+
+       # create a new Seurat obj with only the archR peaks:
+       cur_atac <- Seurat::CreateSeuratObject(
+         cur_chromatin,
+         assay='peaks',
+         meta.data = cur_meta,
+       )
+
+     })
+
+   }
+
 
    print("In Progress:")
    print("Merge Seurat list")
@@ -150,6 +199,7 @@ ArchR2Signac <- function(
    SeuratObject
 
 }
+
 
 #' getGeneScoreMatrix
 #'
