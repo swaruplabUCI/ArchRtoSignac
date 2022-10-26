@@ -68,21 +68,22 @@ if (!requireNamespace("stringr", quietly = TRUE)) install.packages("stringr")
 
 ## Usage
 
-Check all required dependencies have been installed and load them automatically.
+* Check all required dependencies have been installed and load them automatically.
+
 ```r
 packages <- c("ArchR","Seurat", "Signac","stringr") # required packages
 loadinglibrary(packages)
 
 ```
 
-Obtain ArchRProject peak matrix for object conversion.
+* Obtain ArchRProject peak matrix for object conversion.
 
 ```r
 pkm <- getPeakMatrix(proj) # proj is an ArchRProject
 
 ```
 
-Extract appropriate Ensembl gene annotation and convert to UCSC style.
+* Extract appropriate Ensembl gene annotation and convert to UCSC style.
 
 ```r
 library(EnsDb.Hsapiens.v86) # Ensembl database to convert to human hg38. Install what is appropriate for your analysis
@@ -91,7 +92,11 @@ annotations <- getAnnotation(reference = EnsDb.Hsapiens.v86, refversion = "hg38"
 
 ```
 
-Convert ArchRProject to Signac SeuratObject.
+* Convert ArchRProject to Signac SeuratObject.
+
+Option1: Fragments Files using for `fragments_fromcellranger` from 10X Genomics Cellranger ATAC output
+
+Please select Yes for `fragments_fromcellranger`. Example `fragments_fromcellranger = "Yes"` 
 
 ```r
 fragments_dir <- "path_to_cellranger_atac_output" # the directory before "/outs/" for all samples
@@ -102,14 +107,56 @@ seurat_atac <- ArchR2Signac(
   #samples = samplelist, # list of samples in the ArchRProject (default will use ArchRProject@cellColData$Sample but another list can be provided)
   fragments_dir = fragments_dir,
   pm = pkm, # peak matrix from getPeakMatrix()
-  fragments_fromcellranger = "Yes",
-  fragments_file_extension = NULL,
+  fragments_fromcellranger = "Yes", # fragments_fromcellranger This is an Yes or No selection ("NO" | "N" | "No" or "YES" | "Y" | "Yes")
+  fragments_file_extension = NULL, # Default - NULL: File_Extension for fragments files (typically they should be '.tsv.gz' or '.fragments.tsv.gz')
   annotation = annotations # annotation from getAnnotation()
 )
 
 ```
+Option2: Fragments Files using for `fragments_fromcellranger` from **NON** Cellranger ATAC output, ie: SnapATAC tools
 
-Transfer ArchRProject gene score matrix to Signac SeuratObject.
+Please select No for `fragments_fromcellranger`. Example `fragments_fromcellranger = "NO"`, Also remember to provide the `fragments_file_extension`, for example `fragments_fromcellranger = '.tsv.gz'` or `fragments_fromcellranger = '.fragments.tsv.gz'`.
+
+```r
+fragments_dir <- "/ArchR/HemeFragments/" # please see the fragments format provided by ArchR examples
+
+```
+Above is the directory accessing the fragments files.
+
+For eample, Fragments files in the folder HemeFragments, which we can check them in terminal
+
+```r
+tree /ArchR/HemeFragments/
+
+/ArchR/HemeFragments/
+├── scATAC_BMMC_R1.fragments.tsv.gz
+├── scATAC_BMMC_R1.fragments.tsv.gz.tbi
+├── scATAC_CD34_BMMC_R1.fragments.tsv.gz
+├── scATAC_CD34_BMMC_R1.fragments.tsv.gz.tbi
+├── scATAC_PBMC_R1.fragments.tsv.gz
+└── scATAC_PBMC_R1.fragments.tsv.gz.tbi
+
+```
+
+Now back in R 
+
+```r
+
+# Conversion function
+seurat_atac <- ArchR2Signac(
+  ArchRProject = proj,
+  # samples = samples, # Provide a list of unique sample
+  fragments_dir = fragments_dir, # directory of the cellranger output, the folder that contains all samples
+  pm = pm, # geting peak martix
+  fragments_fromcellranger = "NO",
+  fragments_file_extension = '.fragments.tsv.gz',
+  refversion = 'hg38', # write the EnsDb version
+  annotation = annotations
+)
+
+```
+
+* Transfer ArchRProject gene score matrix to Signac SeuratObject.
 
 ```r
 gsm <- getGeneScoreMatrix(ArchRProject = proj, SeuratObject = seurat_atac)
@@ -118,7 +165,7 @@ seurat_atac[['RNA']] <- CreateAssayObject(counts = gsm)
 
 ```
 
-Transfer ArchRProject dimension reduction ("IterativeLSI" or "Harmony") and UMAP to Signac SeuratObject.
+* Transfer ArchRProject dimension reduction ("IterativeLSI" or "Harmony") and UMAP to Signac SeuratObject.
 
 ```r
 seurat_atac <- addDimRed(ArchRProject = proj,

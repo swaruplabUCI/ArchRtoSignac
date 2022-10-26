@@ -106,7 +106,7 @@ ArchR2Signac <- function(
   annotation # annotation from getAnnotation()
  ){
    if (is.null(samples)){
-     samples <- unique(proj@cellColData$Sample)
+     samples <- unique(ArchRProject@cellColData$Sample)
    }
 
    if(fragments_fromcellranger == "YES" | fragments_fromcellranger == "Y" | fragments_fromcellranger == "Yes") {
