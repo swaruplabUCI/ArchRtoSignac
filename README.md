@@ -35,6 +35,8 @@ if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 
 # install ArchRtoSignac
 devtools::install_github("swaruplabUCI/ArchRtoSignac")
+# load ArchRtoSignac
+library(ArchRtoSignac)
 
 ```
 
