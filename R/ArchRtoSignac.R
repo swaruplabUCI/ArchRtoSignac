@@ -92,7 +92,7 @@ getAnnotation<- function(
 #' @param annotation annotation from the function getAnnotation()
 #' @export
 #' @examples
-#' seurat_atac <- ArchR2Signac(ArchRProject = proj1, refversion = 'hg38', samples = samples, fragments_dir = fragments_dir, pm = pm, output_dir = '/outs/', annotation = annotations)
+#' seurat_atac <- ArchR2Signac(ArchRProject = proj1, refversion = 'hg38', samples = samples, fragments_dir = fragments_dir, pm = pm, fragments_fromcellranger = "Yes", fragments_file_extension = NULL, annotation = annotations)
 
 ArchR2Signac <- function(
   ArchRProject,
