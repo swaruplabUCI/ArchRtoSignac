@@ -152,7 +152,7 @@ Now back in R
 seurat_atac <- ArchR2Signac(
   ArchRProject = proj,
   # samples = samples, # Provide a list of unique sample
-  fragments_dir = fragments_dir, # directory of the cellranger output, the folder that contains all samples
+  fragments_dir = fragments_dir, # the folder that contains all fragments samples in '.fragments.tsv.gz' or '.tsv.gz'
   pm = pm, # geting peak martix
   fragments_fromcellranger = "NO",
   fragments_file_extension = '.fragments.tsv.gz',
