@@ -8,6 +8,11 @@
 ArchR and Signac are both commonly used scATAC-seq analysis packages with comparable sets of features and are currently under development, which means they are likely to change over time. You can choose to use only one of these packages; however, you may want to use both packages for your analysis. For example, we use ArchR to generate a fixed-width peak matrix due to its computational advantage, and we use Signac for reference mapping to assist in cell-type annotation. Here we provide an option to help with the data formatting from an ArchRProject to a Signac SeuratObject: **ArchRtoSignac**, a wrapper function that allows easier implementation of both pipelines. In addition, conversion to a SeuratObject allows the use of other packages available through SeuratWrappers.
 
 ---
+## How to cite
+
+Shi, Zechuan; Das, Sudeshna; Morabito, Samuel; Miyoshi, Emily; Swarup, Vivek. (2022). Protocol for single-nucleus ATAC sequencing and bioinformatic analysis in frozen human brain tissue, STAR Protocols, Volume 3, Issue 3, DOI: https://doi.org/10.1016/j.xpro.2022.101491.
+
+---
 
 ## Installation
 
@@ -97,7 +102,8 @@ seurat_atac <- ArchR2Signac(
   #samples = samplelist, # list of samples in the ArchRProject (default will use ArchRProject@cellColData$Sample but another list can be provided)
   fragments_dir = fragments_dir,
   pm = pkm, # peak matrix from getPeakMatrix()
-  #output_dir = "/outs/", # folder with "fragments.tsv.gz" ("/outs/" is the default)
+  fragments_fromcellranger = "Yes",
+  fragments_file_extension = NULL,
   annotation = annotations # annotation from getAnnotation()
 )
 
