@@ -88,7 +88,7 @@ getAnnotation<- function(
 #' @param fragments_dir PATH to the cellranger-atac output--the folder that contains all samples folders, not the one with '/outs/fragments.tsv.gz'.
 #' @param pm Peak matrix (output) from the function getPeakMatrix
 #' @param fragments_fromcellranger This is an Yes or No selection ("NO" | "N" | "No" or "YES" | "Y" | "Yes")
-#' @param fragments_file_extension File_Extension for fragments files (typically they should be '.tsv.gz' or ".fragments.tsv.gz)
+#' @param fragments_file_extension File_Extension for fragments files (typically they should be '.tsv.gz' or '.fragments.tsv.gz')
 #' @param annotation annotation from the function getAnnotation()
 #' @export
 #' @examples
@@ -101,7 +101,7 @@ ArchR2Signac <- function(
   fragments_dir = NULL, # directory of the cellranger output, the folder that contains all samples
   pm, # geting peak martix
   fragments_fromcellranger = NULL, # "NO" | "N" | "No" or "YES" | "Y" | "Yes"
-  fragments_file_extension = NULL, #  '.tsv.gz' or ".fragments.tsv.gz
+  fragments_file_extension = NULL, #  '.tsv.gz' or '.fragments.tsv.gz'
   # output_dir = '/outs/', # removal due to the input format for snapATAC, added when fragments_fromcellranger == "NO" | "N" | "No"
   annotation # annotation from getAnnotation()
  ){
