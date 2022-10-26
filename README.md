@@ -141,6 +141,12 @@ tree /ArchR/HemeFragments/
 Now back in R 
 
 ```r
+## NOTE: steps before the the conversion from ArchRProject to Signac SeuratObject.
+
+#BiocManager::install("EnsDb.Hsapiens.v75")
+#library(EnsDb.Hsapiens.v75)
+#annotations <- getAnnotation(seqStyle = 'UCSC', refversion = 'hg19', reference = EnsDb.Hsapiens.v75)
+#pm <- getPeakMatrix(ArchRProject= proj)
 
 # Conversion function
 seurat_atac <- ArchR2Signac(
@@ -150,7 +156,7 @@ seurat_atac <- ArchR2Signac(
   pm = pm, # geting peak martix
   fragments_fromcellranger = "NO",
   fragments_file_extension = '.fragments.tsv.gz',
-  refversion = 'hg38', # write the EnsDb version
+  refversion = 'hg19', # write the EnsDb version
   annotation = annotations
 )
 
