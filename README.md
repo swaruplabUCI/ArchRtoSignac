@@ -68,7 +68,7 @@ if (!requireNamespace("stringr", quietly = TRUE)) install.packages("stringr")
 
 ## Usage
 
-* Check all required dependencies have been installed and load them automatically.
+* **STEP0 - Check all required dependencies have been installed and load them automatically.**
 
 ```r
 packages <- c("ArchR","Seurat", "Signac","stringr") # required packages
@@ -76,14 +76,14 @@ loadinglibrary(packages)
 
 ```
 
-* Obtain ArchRProject peak matrix for object conversion.
+* **Obtain ArchRProject peak matrix for object conversion.**
 
 ```r
 pkm <- getPeakMatrix(proj) # proj is an ArchRProject
 
 ```
 
-* Extract appropriate Ensembl gene annotation and convert to UCSC style.
+* **Extract appropriate Ensembl gene annotation and convert to UCSC style.**
 
 ```r
 library(EnsDb.Hsapiens.v86) # Ensembl database to convert to human hg38. Install what is appropriate for your analysis
@@ -92,7 +92,7 @@ annotations <- getAnnotation(reference = EnsDb.Hsapiens.v86, refversion = "hg38"
 
 ```
 
-* Convert ArchRProject to Signac SeuratObject.
+* **Convert ArchRProject to Signac SeuratObject.**
 
 Option1: Fragments Files using for `fragments_fromcellranger` from 10X Genomics Cellranger ATAC output
 
@@ -162,7 +162,7 @@ seurat_atac <- ArchR2Signac(
 
 ```
 
-* Transfer ArchRProject gene score matrix to Signac SeuratObject.
+* **Transfer ArchRProject gene score matrix to Signac SeuratObject.**
 
 ```r
 gsm <- getGeneScoreMatrix(ArchRProject = proj, SeuratObject = seurat_atac)
@@ -171,7 +171,7 @@ seurat_atac[['RNA']] <- CreateAssayObject(counts = gsm)
 
 ```
 
-* Transfer ArchRProject dimension reduction ("IterativeLSI" or "Harmony") and UMAP to Signac SeuratObject.
+* **Transfer ArchRProject dimension reduction ("IterativeLSI" or "Harmony") and UMAP to Signac SeuratObject.**
 
 ```r
 seurat_atac <- addDimRed(ArchRProject = proj,
