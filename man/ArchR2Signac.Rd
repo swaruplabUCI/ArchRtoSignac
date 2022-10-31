@@ -10,7 +10,8 @@ ArchR2Signac(
   samples = NULL,
   fragments_dir = NULL,
   pm,
-  output_dir = "/outs/",
+  fragments_fromcellranger = NULL,
+  fragments_file_extension = NULL,
   annotation
 )
 }
@@ -25,7 +26,9 @@ ArchR2Signac(
 
 \item{pm}{Peak matrix (output) from the function getPeakMatrix}
 
-\item{output_dir}{PATH before 'fragments.tsv.gz' from cell-ranger-atac (typically this is '/outs/' and is the default)}
+\item{fragments_fromcellranger}{This is an Yes or No selection ("NO" | "N" | "No" or "YES" | "Y" | "Yes")}
+
+\item{fragments_file_extension}{File_Extension for fragments files (typically they should be '.tsv.gz' or '.fragments.tsv.gz')}
 
 \item{annotation}{annotation from the function getAnnotation()}
 }
@@ -33,5 +36,5 @@ ArchR2Signac(
 This function converts the ArchRProject to a SeuratObject by creating a list of Seurat objects for each sample with their corresponding peak matrix and then merging all of the objects in the list.
 }
 \examples{
-seurat_atac <- ArchR2Signac(ArchRProject = proj1, refversion = 'hg38', samples = samples, fragments_dir = fragments_dir, pm = pm, output_dir = '/outs/', annotation = annotations)
+seurat_atac <- ArchR2Signac(ArchRProject = proj1, refversion = 'hg38', samples = samples, fragments_dir = fragments_dir, pm = pm, fragments_fromcellranger = "Yes", fragments_file_extension = NULL, annotation = annotations)
 }
