@@ -181,19 +181,21 @@ seurat_atac[['RNA']] <- CreateAssayObject(counts = gsm)
 * **STEP 5 - Transfer ArchRProject dimension reduction ("IterativeLSI", "IterativeLSI2" or "Harmony") and UMAP to Signac SeuratObject.**
 
 ```r
-seurat_atac <- addDimRed(ArchRProject = proj,
-			 SeuratObject = seurat_atac,
-       addUMAPs = "UMAP",
-			 reducedDims = "IterativeLSI"
+seurat_atac <- addDimRed(
+  ArchRProject = proj,
+  SeuratObject = seurat_atac,
+  addUMAPs = "UMAP",
+  reducedDims = "IterativeLSI"
 ) # default is "IterativeLSI"
 
 #add both 'Harmony' and ‘IterativeLSI’:
-seurat_atac <- addTwoDimRed(ArchRProject = proj,
-			 SeuratObject = seurat_atac,
-       addUMAPs = "UMAP",
-			 reducedDims1 = "IterativeLSI",
+seurat_atac <- addTwoDimRed(
+  ArchRProject = proj,
+  SeuratObject = seurat_atac,
+  addUMAPs = "UMAP",
+  reducedDims1 = "IterativeLSI",
        # Please limit your reducedDims to one of the following: IterativeLSI, IterativeLSI2 or Harmony
-       reducedDims2 = "Harmony" # IterativeLSI2 or Harmony
+  reducedDims2 = "Harmony" # IterativeLSI2 or Harmony
 )
 
 ```
