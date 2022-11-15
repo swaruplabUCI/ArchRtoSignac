@@ -139,10 +139,11 @@ tree /ArchR/HemeFragments/
 └── scATAC_PBMC_R1.fragments.tsv.gz.tbi
 
 ```
-** Possible issue due to the fragments format if fragments files are not from cellranger actac out
-https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/output/fragments
+** **Possible issue** due to the fragments format if fragments files are not from cellranger actac out:
+Reported in [#Issue3](https://github.com/swaruplabUCI/ArchRtoSignac/issues/3)
+Please check out: Signac snATAC-seq fragment file [Format](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/output/fragments)
 
-** Solution
+** **Solution**
 https://github.com/stuart-lab/signac/issues/748
 
 Now back in R
