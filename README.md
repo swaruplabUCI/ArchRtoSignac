@@ -98,7 +98,7 @@ annotations <- getAnnotation(reference = EnsDb.Hsapiens.v86, refversion = "hg38"
 
 Option1: Fragments Files using for `fragments_fromcellranger` from 10X Genomics Cellranger ATAC output
 
-Please select Yes for `fragments_fromcellranger`. Example `fragments_fromcellranger = "Yes"` 
+Please select Yes for `fragments_fromcellranger`. Example `fragments_fromcellranger = "Yes"`
 
 ```r
 fragments_dir <- "path_to_cellranger_atac_output" # the directory before "/outs/" for all samples
@@ -139,8 +139,12 @@ tree /ArchR/HemeFragments/
 └── scATAC_PBMC_R1.fragments.tsv.gz.tbi
 
 ```
+## Possible issue due to the fragments format if fragments files are not from cellranger actac out
+https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/output/fragments
+# Solution
+https://github.com/stuart-lab/signac/issues/748
 
-Now back in R 
+Now back in R
 
 ```r
 ## NOTE: steps before the the conversion from ArchRProject to Signac SeuratObject.
