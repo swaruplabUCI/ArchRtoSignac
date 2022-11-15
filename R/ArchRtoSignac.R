@@ -243,13 +243,15 @@ getGeneScoreMatrix <- function(
 #'
 #' @param ArchRProject An ArchRProject
 #' @param SeuratObject A Seurat object
-#' @param reducedDims 'Harmony' and/or 'IterativeLSI', the dimension reduction to be transfered from ArchRProject to Signac SeuratObject (default is 'IterativeLSI')
+#' @param addUMAPs  add UMAPs by default
+#' @param reducedDims 'Harmony' or 'IterativeLSI' or 'IterativeLSI2', the dimension reduction to be transfered from ArchRProject to Signac SeuratObject (default is 'IterativeLSI')
 #' @export
 #' @examples
 #' seurat_atac <- addDimRed(ArchRProject = proj, SeuratObject = seurat_atac, reducedDims = 'IterativeLSI') #reducedDims == c('IterativeLSI', 'Harmony')
 addDimRed <- function(
   ArchRProject,
   SeuratObject,
+  addUMAPs = "UMAP",
   reducedDims = 'IterativeLSI'
 ){
   print("In Progress:")
@@ -283,19 +285,78 @@ addDimRed <- function(
         embeddings=LSI_matrix,
         assay="peaks"
     )
-  } else if(reducedDims == c('IterativeLSI', 'Harmony') | reducedDims == c('Harmony', 'IterativeLSI')){
+  } else if(reducedDims == 'IterativeLSI2'){
+    LSI_matrix2 <- ArchRProject@reducedDims$IterativeLSI2$matSVD
+    rownames(LSI_matrix2) <- colnames(SeuratObject)
+    colnames(LSI_matrix2) <- paste0('LSI_', 1:ncol(LSI_matrix2))
 
-    print("In Progress: add IterativeLSI From ArchRProject to SeuratObject")
-    LSI_matrix <- ArchRProject@reducedDims$IterativeLSI$matSVD
-    rownames(LSI_matrix) <- colnames(SeuratObject)
-    colnames(LSI_matrix) <- paste0('LSI_', 1:ncol(LSI_matrix))
-
-    SeuratObject@reductions$IterativeLSI <- Seurat::CreateDimReducObject(
-        embeddings=LSI_matrix,
+    SeuratObject@reductions$IterativeLSI2 <- Seurat::CreateDimReducObject(
+        embeddings=LSI_matrix2,
         assay="peaks"
     )
+  }
+  # else if(reducedDims == c('IterativeLSI', 'Harmony') | reducedDims == c('Harmony', 'IterativeLSI')){
+  #
+  #   print("In Progress: add IterativeLSI From ArchRProject to SeuratObject")
+  #   LSI_matrix <- ArchRProject@reducedDims$IterativeLSI$matSVD
+  #   rownames(LSI_matrix) <- colnames(SeuratObject)
+  #   colnames(LSI_matrix) <- paste0('LSI_', 1:ncol(LSI_matrix))
+  #
+  #   SeuratObject@reductions$IterativeLSI <- Seurat::CreateDimReducObject(
+  #       embeddings=LSI_matrix,
+  #       assay="peaks"
+  #   )
+  #
+  #   print("In Progress: add Harmony From ArchRProject to SeuratObject")
+  #   harmony_matrix <- ArchRProject@reducedDims$Harmony$matDR
+  #   rownames(harmony_matrix) <- colnames(SeuratObject)
+  #   colnames(harmony_matrix) <- paste0('LSI_', 1:ncol(harmony_matrix))
+  #
+  #   SeuratObject@reductions$harmony <- Seurat::CreateDimReducObject(
+  #       embeddings=harmony_matrix,
+  #       assay="peaks"
+  #   )
+  #
+  # }
 
-    print("In Progress: add Harmony From ArchRProject to SeuratObject")
+  print("Return SeuratObject")
+  SeuratObject
+
+}
+
+#' addTwoDimRed
+#'
+#' This function adds dimension reduction ('Harmony' and/or 'IterativeLSI') and UMAP to a SeuratObject
+#'
+#' @param ArchRProject An ArchRProject
+#' @param SeuratObject A Seurat object
+#' @param addUMAPs  add UMAPs by default
+#' @param reducedDims1 'Harmony'or 'IterativeLSI' or 'IterativeLSI2', the dimension reduction to be transfered from ArchRProject to Signac SeuratObject (default is 'IterativeLSI')
+#' @param reducedDims2 'Harmony'or 'IterativeLSI' or 'IterativeLSI2', the dimension reduction to be transfered from ArchRProject to Signac SeuratObject (default is 'IterativeLSI')
+#' @export
+#' @examples
+#' seurat_atac <- addTwoDimRed(ArchRProject = proj, SeuratObject = seurat_atac, reducedDims1 = 'IterativeLSI', reducedDims2= 'Harmony')
+addTwoDimRed <- function(
+  ArchRProject,
+  SeuratObject,
+  addUMAPs = "UMAP",
+  reducedDims1 = NULL,
+  reducedDims2 = NULL
+){
+  print("In Progress:")
+  print("add UMAP From ArchRProject to SeuratObject")
+  umap_df <- ArchRProject@embeddings$UMAP$df %>% as.matrix
+  rownames(umap_df) <- colnames(SeuratObject) # make the rowname the same format as seurat
+  colnames(umap_df) <- c('UMAP_1', 'UMAP_2')
+
+  SeuratObject@reductions$umap <- Seurat::CreateDimReducObject(
+      embeddings=umap_df,
+      assay="peaks"
+  )
+
+  print("In Progress:")
+  print("add reducedDims1 From ArchRProject to SeuratObject")
+  if(reducedDims1 == 'Harmony'){
     harmony_matrix <- ArchRProject@reducedDims$Harmony$matDR
     rownames(harmony_matrix) <- colnames(SeuratObject)
     colnames(harmony_matrix) <- paste0('LSI_', 1:ncol(harmony_matrix))
@@ -304,9 +365,56 @@ addDimRed <- function(
         embeddings=harmony_matrix,
         assay="peaks"
     )
+  } else if(reducedDims1 == 'IterativeLSI'){
+    LSI_matrix <- ArchRProject@reducedDims$IterativeLSI$matSVD
+    rownames(LSI_matrix) <- colnames(SeuratObject)
+    colnames(LSI_matrix) <- paste0('LSI_', 1:ncol(LSI_matrix))
 
+    SeuratObject@reductions$IterativeLSI <- Seurat::CreateDimReducObject(
+        embeddings=LSI_matrix,
+        assay="peaks"
+    )
+  } else if(reducedDims1 == 'IterativeLSI2'){
+    LSI_matrix2 <- ArchRProject@reducedDims$IterativeLSI2$matSVD
+    rownames(LSI_matrix2) <- colnames(SeuratObject)
+    colnames(LSI_matrix2) <- paste0('LSI_', 1:ncol(LSI_matrix2))
+
+    SeuratObject@reductions$IterativeLSI2 <- Seurat::CreateDimReducObject(
+        embeddings=LSI_matrix2,
+        assay="peaks"
+    )
   }
 
+  print("In Progress:")
+  print("add reducedDims2 From ArchRProject to SeuratObject")
+  if(reducedDims2 == 'Harmony'){
+    harmony_matrix <- ArchRProject@reducedDims$Harmony$matDR
+    rownames(harmony_matrix) <- colnames(SeuratObject)
+    colnames(harmony_matrix) <- paste0('LSI_', 1:ncol(harmony_matrix))
+
+    SeuratObject@reductions$harmony <- Seurat::CreateDimReducObject(
+        embeddings=harmony_matrix,
+        assay="peaks"
+    )
+  } else if(reducedDims2 == 'IterativeLSI'){
+    LSI_matrix <- ArchRProject@reducedDims$IterativeLSI$matSVD
+    rownames(LSI_matrix) <- colnames(SeuratObject)
+    colnames(LSI_matrix) <- paste0('LSI_', 1:ncol(LSI_matrix))
+
+    SeuratObject@reductions$IterativeLSI <- Seurat::CreateDimReducObject(
+        embeddings=LSI_matrix,
+        assay="peaks"
+    )
+  }  else if(reducedDims2 == 'IterativeLSI2'){
+    LSI_matrix2 <- ArchRProject@reducedDims$IterativeLSI2$matSVD
+    rownames(LSI_matrix2) <- colnames(SeuratObject)
+    colnames(LSI_matrix2) <- paste0('LSI_', 1:ncol(LSI_matrix2))
+
+    SeuratObject@reductions$IterativeLSI2 <- Seurat::CreateDimReducObject(
+        embeddings=LSI_matrix2,
+        assay="peaks"
+    )
+  }
 
   print("Return SeuratObject")
   SeuratObject

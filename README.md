@@ -98,7 +98,7 @@ annotations <- getAnnotation(reference = EnsDb.Hsapiens.v86, refversion = "hg38"
 
 Option1: Fragments Files using for `fragments_fromcellranger` from 10X Genomics Cellranger ATAC output
 
-Please select Yes for `fragments_fromcellranger`. Example `fragments_fromcellranger = "Yes"` 
+Please select Yes for `fragments_fromcellranger`. Example `fragments_fromcellranger = "Yes"`
 
 ```r
 fragments_dir <- "path_to_cellranger_atac_output" # the directory before "/outs/" for all samples
@@ -139,8 +139,13 @@ tree /ArchR/HemeFragments/
 └── scATAC_PBMC_R1.fragments.tsv.gz.tbi
 
 ```
+** Possible issue due to the fragments format if fragments files are not from cellranger actac out
+https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/output/fragments
 
-Now back in R 
+** Solution
+https://github.com/stuart-lab/signac/issues/748
+
+Now back in R
 
 ```r
 ## NOTE: steps before the the conversion from ArchRProject to Signac SeuratObject.
@@ -173,15 +178,24 @@ seurat_atac[['RNA']] <- CreateAssayObject(counts = gsm)
 
 ```
 
-* **STEP 5 - Transfer ArchRProject dimension reduction ("IterativeLSI" or "Harmony") and UMAP to Signac SeuratObject.**
+* **STEP 5 - Transfer ArchRProject dimension reduction ("IterativeLSI", "IterativeLSI2" or "Harmony") and UMAP to Signac SeuratObject.**
 
 ```r
-seurat_atac <- addDimRed(ArchRProject = proj,
-			 SeuratObject = seurat_atac,
-			 reducedDims = "IterativeLSI"
+seurat_atac <- addDimRed(
+  ArchRProject = proj,
+  SeuratObject = seurat_atac,
+  addUMAPs = "UMAP",
+  reducedDims = "IterativeLSI"
 ) # default is "IterativeLSI"
-	#add both 'Harmony' and ‘IterativeLSI’:
-	#reducedDims = c('IterativeLSI', 'Harmony')
 
+#add both 'Harmony' and ‘IterativeLSI’:
+seurat_atac <- addTwoDimRed(
+  ArchRProject = proj,
+  SeuratObject = seurat_atac,
+  addUMAPs = "UMAP",
+  reducedDims1 = "IterativeLSI",
+       # Please limit your reducedDims to one of the following: IterativeLSI, IterativeLSI2 or Harmony
+  reducedDims2 = "Harmony" # IterativeLSI2 or Harmony
+)
 
 ```
