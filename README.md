@@ -126,7 +126,7 @@ fragments_dirs <- list(
   "/path/to/sample3/cellranger/output"
 )
 
-# # Optional: use when fragments_fromcellranger = "NO", please set the file extension for the fragments file
+# # Optional: when fragments_fromcellranger = "NO", please set the file extension for the fragments file
 # fragments_file_extension <- ".fragments.tsv.gz"
 
 # Call the ArchR2Signac function with the provided arguments
