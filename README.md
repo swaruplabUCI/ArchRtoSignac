@@ -131,13 +131,13 @@ fragments_dirs <- list(
 
 # Call the ArchR2Signac function with the provided arguments
 SeuratObject <- ArchR2Signac(
-  ArchRProject = ArchRProject,
-  refversion = refversion,
+  ArchRProject = proj,
+  refversion = "hg38",
   samples = samples,
   fragments_dir = fragments_dirs,
-  pm = pm,
+  pm = pkm,
   fragments_fromcellranger = "YES",
-  annotation = annotation
+  annotation = annotations
 )
 
 ```
