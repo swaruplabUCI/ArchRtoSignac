@@ -115,7 +115,8 @@ seurat_atac <- ArchR2Signac(
   annotation = annotations # annotation from getAnnotation()
 )
 
-# Option 1b: Set a list of directories containing the cellranger output for each sample (this newly added code to take in a list of fragments' path work both for fragments from cellranger and fragments not from cellranger, and when fragments are not from cellranger, please provide fragments_file_extension)
+# Option 1b: Set a list of directories containing the cellranger output for each sample 
+# (this newly added code to take in a list of fragments' path work both for fragments from cellranger and fragments not from cellranger, and when fragments are not from cellranger, please provide fragments_file_extension)
 fragments_dirs <- list(
   "/path/to/sample1/cellranger/output",
   "/path/to/sample2/cellranger/output",
