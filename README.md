@@ -115,18 +115,15 @@ seurat_atac <- ArchR2Signac(
   annotation = annotations # annotation from getAnnotation()
 )
 
-# Option 1b: Set a list of directories containing the cellranger output for each sample
+# Option 1b: Set a list of directories containing the cellranger output for each sample (this newly added code to take in a list of fragments' path work both for fragments from cellranger and fragments not from cellranger, and when fragments are not from cellranger, please provide fragments_file_extension)
 fragments_dirs <- list(
   "/path/to/sample1/cellranger/output",
   "/path/to/sample2/cellranger/output",
   "/path/to/sample3/cellranger/output"
 )
 
-# Set the file extension for the fragments file
-fragments_file_extension <- ".fragments.tsv.gz"
-
-# Set the annotation from getAnnotation()
-annotation <- "hg19_ensGene.txt"
+# # Optional: use when fragments_fromcellranger = "NO", please set the file extension for the fragments file
+# fragments_file_extension <- ".fragments.tsv.gz"
 
 # Call the ArchR2Signac function with the provided arguments
 SeuratObject <- ArchR2Signac(
@@ -136,7 +133,6 @@ SeuratObject <- ArchR2Signac(
   fragments_dir = fragments_dirs,
   pm = pm,
   fragments_fromcellranger = "YES",
-  fragments_file_extension = fragments_file_extension,
   annotation = annotation
 )
 
