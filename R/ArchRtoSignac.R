@@ -118,7 +118,10 @@ ArchR2Signac <- function(
      seurat_list <- lapply(samples, function(cur_sample){
        print(cur_sample)
        #print out the sample name in progress
-       cur_fragments <- paste0(fragments_dir, cur_sample, output_dir, 'fragments.tsv.gz')
+       cur_fragments <- ifelse(is.list(fragments_dir),
+                               paste0(fragments_dir[[which(samples == cur_sample)]], output_dir, 'fragments.tsv.gz'),
+                               paste0(fragments_dir, cur_sample, output_dir, 'fragments.tsv.gz'))
+
        # seeking the pattern matched in colnames(pm); metadata of the corresponding sample
        cur_pm <- pm[,grepl(paste0(cur_sample, '#'), colnames(pm))]
        cur_meta <- ArchRProject@cellColData %>% as.data.frame %>% subset(Sample == cur_sample)
@@ -156,7 +159,9 @@ ArchR2Signac <- function(
      seurat_list <- lapply(samples, function(cur_sample){
        print(cur_sample)
        #print out the sample name in progress
-       cur_fragments <- paste0(fragments_dir, cur_sample, fragments_file_extension)
+       cur_fragments <- ifelse(is.list(fragments_dir),
+                        paste0(fragments_dir[[which(samples == cur_sample)]], fragments_file_extension),
+                        paste0(fragments_dir, cur_sample, fragments_file_extension))
        # seeking the pattern matched in colnames(pm); metadata of the corresponding sample
        cur_pm <- pm[,grepl(paste0(cur_sample, '#'), colnames(pm))]
        cur_meta <- ArchRProject@cellColData %>% as.data.frame %>% subset(Sample == cur_sample)
@@ -199,6 +204,7 @@ ArchR2Signac <- function(
    SeuratObject
 
 }
+
 
 
 #' getGeneScoreMatrix
