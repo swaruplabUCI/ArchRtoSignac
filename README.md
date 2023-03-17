@@ -101,6 +101,7 @@ Option1: Fragments Files using for `fragments_fromcellranger` from 10X Genomics 
 Please select Yes for `fragments_fromcellranger`. Example `fragments_fromcellranger = "Yes"`
 
 ```r
+# Option 1a: Set one directory containing the cellranger output for each sample
 fragments_dir <- "path_to_cellranger_atac_output" # the directory before "/outs/" for all samples
 
 seurat_atac <- ArchR2Signac(
@@ -112,6 +113,31 @@ seurat_atac <- ArchR2Signac(
   fragments_fromcellranger = "Yes", # fragments_fromcellranger This is an Yes or No selection ("NO" | "N" | "No" or "YES" | "Y" | "Yes")
   fragments_file_extension = NULL, # Default - NULL: File_Extension for fragments files (typically they should be '.tsv.gz' or '.fragments.tsv.gz')
   annotation = annotations # annotation from getAnnotation()
+)
+
+# Option 1b: Set a list of directories containing the cellranger output for each sample
+fragments_dirs <- list(
+  "/path/to/sample1/cellranger/output",
+  "/path/to/sample2/cellranger/output",
+  "/path/to/sample3/cellranger/output"
+)
+
+# Set the file extension for the fragments file
+fragments_file_extension <- ".fragments.tsv.gz"
+
+# Set the annotation from getAnnotation()
+annotation <- "hg19_ensGene.txt"
+
+# Call the ArchR2Signac function with the provided arguments
+SeuratObject <- ArchR2Signac(
+  ArchRProject = ArchRProject,
+  refversion = refversion,
+  samples = samples,
+  fragments_dir = fragments_dirs,
+  pm = pm,
+  fragments_fromcellranger = "YES",
+  fragments_file_extension = fragments_file_extension,
+  annotation = annotation
 )
 
 ```
