@@ -194,6 +194,26 @@ seurat_atac <- ArchR2Signac(
   annotation = annotations
 )
 
+## OR providing a fragments list but leave the fragments file extension out (use the 'fragments_file_extension' for the fragments extension)
+fragments_dirs <- list(
+  "/ArchR/HemeFragments/scATAC_BMMC_R1",
+  "/ArchR/HemeFragments/scATAC_CD34_BMMC_R1",
+  "/ArchR/HemeFragments/scATAC_PBMC_R1"
+)
+
+# Call the ArchR2Signac function with the provided arguments
+SeuratObject <- ArchR2Signac(
+  ArchRProject = proj,
+  refversion = "hg19",
+  # samples = samples,
+  fragments_dir = fragments_dirs,
+  pm = pm,
+  fragments_fromcellranger = "NO",
+  fragments_file_extension = '.fragments.tsv.gz',
+  annotation = annotations
+)
+
+
 ```
 
 * **STEP 4 - Transfer ArchRProject gene score matrix to Signac SeuratObject.**
