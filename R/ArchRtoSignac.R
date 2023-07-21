@@ -330,6 +330,65 @@ addDimRed <- function(
 
 }
 
+#' addCustomizeDimRed
+#'
+#' This function adds dimension reduction ('Harmony' and/or 'IterativeLSI') and UMAP to a SeuratObject with customized name of the dimension
+#'
+#' @param ArchRProject An ArchRProject
+#' @param SeuratObject A Seurat object
+#' @param addUMAPs  add UMAPs of the selected UMAPs
+#' @param reducedDims the selected dimension reduction to be transfered from ArchRProject to Signac SeuratObject 
+#' @param reducedDimsType 'Harmony' or 'IterativeLSI', this parameter tells the type of the reduced dimension (default is 'IterativeLSI')
+#' @export
+#' @examples
+#' seurat_atac <- addDimRed(ArchRProject = proj, SeuratObject = seurat_atac, reducedDims = 'IterativeLSI') #reducedDims == c('IterativeLSI', 'Harmony')
+addCustomizeDimRed <- function(
+    ArchRProject,
+    SeuratObject,
+    addUMAPs = "UMAP",
+    reducedDims = 'IterativeLSI',
+    reducedDimsType = 'IterativeLSI'
+){
+  print("In Progress:")
+  print("add UMAP From ArchRProject to SeuratObject")
+  umap_df <- ArchRProject@embeddings[[addUMAPs]]$df %>% as.matrix
+  rownames(umap_df) <- colnames(SeuratObject) # make the rowname the same format as seurat
+  colnames(umap_df) <- c('UMAP_1', 'UMAP_2')
+  
+  SeuratObject@reductions$umap <- Seurat::CreateDimReducObject(
+    embeddings=umap_df,
+    assay="peaks"
+  )
+  
+  print("In Progress:")
+  print("add reduction From ArchRProject to SeuratObject")
+  if(reducedDimsType == 'Harmony'){
+    harmony_matrix <- ArchRProject@reducedDims[[reducedDims]][[1]]
+    rownames(harmony_matrix) <- colnames(SeuratObject)
+    colnames(harmony_matrix) <- paste0('LSI_', 1:ncol(harmony_matrix))
+    
+    SeuratObject@reductions$harmony <- Seurat::CreateDimReducObject(
+      embeddings=harmony_matrix,
+      assay="peaks"
+    )
+  } else if(reducedDimsType == 'IterativeLSI'){
+    LSI_matrix <- ArchRProject@reducedDims[[reducedDims]][[1]]
+    rownames(LSI_matrix) <- colnames(SeuratObject)
+    colnames(LSI_matrix) <- paste0('LSI_', 1:ncol(LSI_matrix))
+    
+    SeuratObject@reductions$IterativeLSI <- Seurat::CreateDimReducObject(
+      embeddings=LSI_matrix,
+      assay="peaks"
+    )
+  } else {
+    stop("Unsupported reduced dimension type, only 'Harmony' and 'IterativeLSI' are supported.")
+  }
+  
+  print("Return SeuratObject")
+  SeuratObject
+  
+}
+
 #' addTwoDimRed
 #'
 #' This function adds dimension reduction ('Harmony' and/or 'IterativeLSI') and UMAP to a SeuratObject
