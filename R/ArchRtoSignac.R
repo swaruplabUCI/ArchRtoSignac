@@ -341,7 +341,7 @@ addDimRed <- function(
 #' @param reducedDimsType 'Harmony' or 'IterativeLSI', this parameter tells the type of the reduced dimension (default is 'IterativeLSI')
 #' @export
 #' @examples
-#' seurat_atac <- addDimRed(ArchRProject = proj, SeuratObject = seurat_atac, reducedDims = 'IterativeLSI') #reducedDims == c('IterativeLSI', 'Harmony')
+#' seurat_atac <- addCustomizeDimRed(ArchRProject = proj, SeuratObject = seurat_atac, addUMAPs = "UMAP", reducedDims = 'IterativeLSI', reducedDimsType = 'IterativeLSI') #reducedDims == c('IterativeLSI', 'Harmony')
 addCustomizeDimRed <- function(
     ArchRProject,
     SeuratObject,
