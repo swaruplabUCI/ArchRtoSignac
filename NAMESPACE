@@ -3,6 +3,7 @@
 export(ArchR2Signac)
 export(addDimRed)
 export(addTwoDimRed)
+export(addCustomizeDimRed)
 export(getAnnotation)
 export(getGeneScoreMatrix)
 export(getPeakMatrix)
