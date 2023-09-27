@@ -245,4 +245,12 @@ seurat_atac <- addTwoDimRed(
   reducedDims2 = "Harmony" # IterativeLSI2 or Harmony
 )
 
+#add Customized named dimension reduction - from reducedDims and reducedDimsType -- 'Harmony' or 'IterativeLSI':
+seurat_atac <- addCustomizeDimRed(ArchRProject = proj3, SeuratObject = seurat_atac, addUMAPs = "UMAP", reducedDims = 'IterativeLSI', reducedDimsType = 'IterativeLSI')
+[1] "In Progress:"
+[1] "add UMAP From ArchRProject to SeuratObject"
+[1] "In Progress:"
+[1] "add reduction From ArchRProject to SeuratObject"
+[1] "Return SeuratObject"
+
 ```
