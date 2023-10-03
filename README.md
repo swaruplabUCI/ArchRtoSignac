@@ -96,7 +96,7 @@ annotations <- getAnnotation(reference = EnsDb.Hsapiens.v86, refversion = "hg38"
 
 * **STEP 3 - Convert ArchRProject to Signac SeuratObject.**
 
-Option1: Fragments Files using for `fragments_fromcellranger` from 10X Genomics Cellranger ATAC output
+****STEP 3 Option1: Fragments Files using for `fragments_fromcellranger` from 10X Genomics Cellranger ATAC output
 
 Please select Yes for `fragments_fromcellranger`. Example `fragments_fromcellranger = "Yes"`
 
@@ -141,19 +141,14 @@ SeuratObject <- ArchR2Signac(
 )
 
 ```
-Option2: Fragments Files using for `fragments_fromcellranger` from **NON** Cellranger ATAC output, ie: SnapATAC tools
+****STEP 3 Option2: Fragments Files using for `fragments_fromcellranger` from **NON** Cellranger ATAC output or even from Cellranger ATAC output but don't match the standard output PATH from Cellranger ATAC `cellranger-atac count`, ie: SnapATAC tools
 
 Please select No for `fragments_fromcellranger`. Example `fragments_fromcellranger = "NO"`, Also remember to provide the `fragments_file_extension`, for example `fragments_fromcellranger = '.tsv.gz'` or `fragments_fromcellranger = '.fragments.tsv.gz'`.
 
-```r
-fragments_dir <- "/ArchR/HemeFragments/" # please see the fragments format provided by ArchR examples
-
+Option2a: Provide only one main `fragments_dir`
 ```
-Above is the directory accessing the fragments files.
-
-For eample, Fragments files in the folder HemeFragments, which we can check them in terminal
-
-```r
+#For eample, Fragments files in the folder HemeFragments, which we can check them in terminal
+### in Linux ###
 tree /ArchR/HemeFragments/
 
 /ArchR/HemeFragments/
@@ -163,7 +158,7 @@ tree /ArchR/HemeFragments/
 ├── scATAC_CD34_BMMC_R1.fragments.tsv.gz.tbi
 ├── scATAC_PBMC_R1.fragments.tsv.gz
 └── scATAC_PBMC_R1.fragments.tsv.gz.tbi
-
+##################
 ```
 ** **Possible issue** due to the fragments format if fragments files are not from cellranger actac out:
 Reported in [#Issue3](https://github.com/swaruplabUCI/ArchRtoSignac/issues/3)
@@ -172,9 +167,10 @@ Please check out: Signac snATAC-seq fragment file [Format](https://support.10xge
 ** **Solution**
 https://github.com/stuart-lab/signac/issues/748
 
-Now back in R
-
 ```r
+fragments_dir <- "/ArchR/HemeFragments/" # please see the fragments format provided by ArchR examples
+#Above is the directory accessing the fragments files.
+
 ## NOTE: steps before the the conversion from ArchRProject to Signac SeuratObject.
 
 #BiocManager::install("EnsDb.Hsapiens.v75")
@@ -193,7 +189,11 @@ seurat_atac <- ArchR2Signac(
   refversion = 'hg19', # write the EnsDb version
   annotation = annotations
 )
+```
 
+Option2b: Provide only one list of `fragments_dirs`
+
+```r
 ## OR providing a fragments list but leave the fragments file extension out (use the 'fragments_file_extension' for the fragments extension)
 fragments_dirs <- list(
   "/ArchR/HemeFragments/scATAC_BMMC_R1",
@@ -210,6 +210,36 @@ SeuratObject <- ArchR2Signac(
   pm = pm,
   fragments_fromcellranger = "NO",
   fragments_file_extension = '.fragments.tsv.gz',
+  annotation = annotations
+)
+```
+Option2c: Provide only one list `fragments_dirs` but make changes to the arguments that supplied for the 'fragments_file_extension'
+This option is used for cellranger output fragments.tsv.gz but doesn't match the standard output path style.
+ie, your fragments file looking like this:
+```
+ls
+/ArchR/HemeFragments/scATAC_BMMC_R1/fragments.tsv.gz
+/ArchR/HemeFragments/scATAC_CD34_BMMC_R1/fragments.tsv.gz
+/ArchR/HemeFragments/scATAC_PBMC_R1/fragments.tsv.gz
+```
+providing a fragments list but leave the fragments file extension out (use the 'fragments_file_extension' for the fragments whole name 'fragments.tsv.gz')
+
+```r
+fragments_dirs <- list(
+  "/ArchR/HemeFragments/scATAC_BMMC_R1/", # Alert: need the "/" in the end
+  "/ArchR/HemeFragments/scATAC_CD34_BMMC_R1/",
+  "/ArchR/HemeFragments/scATAC_PBMC_R1/"
+)
+
+# Call the ArchR2Signac function with the provided arguments
+SeuratObject <- ArchR2Signac(
+  ArchRProject = proj,
+  refversion = "hg19",
+  # samples = samples,
+  fragments_dir = fragments_dirs,
+  pm = pm,
+  fragments_fromcellranger = "NO",
+  fragments_file_extension = 'fragments.tsv.gz', # instead of using fragments_file_extension (.tsv.gz or .fragments.tsv.gz), here just use the whole name fragments.tsv.gz
   annotation = annotations
 )
 
