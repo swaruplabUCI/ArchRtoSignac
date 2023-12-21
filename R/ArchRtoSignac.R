@@ -195,9 +195,18 @@ ArchR2Signac <- function(
    print("In Progress:")
    print("Merge Seurat list")
    # merge objects
-   SeuratObject <- merge(
-     x=seurat_list[[1]], y=seurat_list[2:length(seurat_list)],
-     add.cell.ids = samples
+   # SeuratObject <- merge(
+   #   x=seurat_list[[1]], y=seurat_list[2:length(seurat_list)],
+   #   add.cell.ids = samples
+   # )
+   # merge objects
+   SeuratObject <- ifelse(length(seurat_list) > 1,
+     merge(
+       x = seurat_list[[1]],       # The first Seurat object to merge
+       y = seurat_list[2:length(seurat_list)],  # The rest of the Seurat objects to merge
+       add.cell.ids = samples      # Optional: Add a prefix to cell IDs to identify the samples
+     ),
+     seurat_list[[1]]  # If only one object, no need to merge; just use the single object
    )
 
    print("Return SeuratObject")
