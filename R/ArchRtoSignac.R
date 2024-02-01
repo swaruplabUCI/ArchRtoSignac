@@ -200,14 +200,15 @@ ArchR2Signac <- function(
    #   add.cell.ids = samples
    # )
    # merge objects
-   SeuratObject <- ifelse(length(seurat_list) > 1,
+   SeuratObject <- if (length(seurat_list) > 1) {
      merge(
-       x = seurat_list[[1]],       # The first Seurat object to merge
-       y = seurat_list[2:length(seurat_list)],  # The rest of the Seurat objects to merge
-       add.cell.ids = samples      # Optional: Add a prefix to cell IDs to identify the samples
-     ),
-     seurat_list[[1]]  # If only one object, no need to merge; just use the single object
-   )
+       x = seurat_list[[1]],
+       y = seurat_list[2:length(seurat_list)],
+       add.cell.ids = samples
+     )
+   } else {
+  seurat_list[[1]]
+  }
 
    print("Return SeuratObject")
    SeuratObject
