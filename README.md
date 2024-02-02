@@ -116,7 +116,8 @@ annotations <- getAnnotation(reference = EnsDb.Hsapiens.v86, refversion = "hg38"
 ```
 
 ### Convert ArchRProject to Signac SeuratObject
-  - STEP 3 - Convert ArchRProject to Signac SeuratObject.
+  - STEP 3 - Convert ArchRProject to Signac SeuratObject
+  - Choosing from the following options based on the format of the fragment files you generated before
 
 **STEP 3 Option1**: Fragments Files using for `fragments_fromcellranger` from 10X Genomics Cellranger ATAC output
 Option 1 is designed for the saving format exactly like output from the pipeline run by 10X Genomics Cellranger ATAC
