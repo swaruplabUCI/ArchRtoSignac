@@ -1,7 +1,11 @@
-
 # ArchRtoSignac : an Object Conversion Package for ArchR to Signac
 
 [![DOI](https://zenodo.org/badge/473458154.svg)](https://zenodo.org/badge/latestdoi/473458154)
+[![version](https://img.shields.io/badge/version-1.0.4-red.svg)](https://semver.org)
+[![Open Issues](https://img.shields.io/github/issues-raw/swaruplabUCI/ArchRtoSignac?label=open%20issues&color=yellow)](https://github.com/swaruplabUCI/ArchRtoSignac/issues)
+[![Closed Issues](https://img.shields.io/github/issues-closed-raw/swaruplabUCI/ArchRtoSignac?label=closed%20issues&color=green)](https://github.com/swaruplabUCI/ArchRtoSignac/issues?q=is%3Aissue+is%3Aclosed)
+
+**NOTE**: Please **update** the package from version 1.0.3 to **1.0.4** to fix a possible object merging error
 
 **ArchRtoSignac** is an R package to convert an ArchRProject [(ArchR)](https://www.archrproject.com/index.html) to a Signac SeuratObject [(Signac)](https://satijalab.org/signac/index.html).
 
@@ -11,6 +15,20 @@ ArchR and Signac are both commonly used scATAC-seq analysis packages with compar
 ## How to cite
 
 Shi, Zechuan; Das, Sudeshna; Morabito, Samuel; Miyoshi, Emily; Swarup, Vivek. (2022). Protocol for single-nucleus ATAC sequencing and bioinformatic analysis in frozen human brain tissue, STAR Protocols, Volume 3, Issue 3, DOI: https://doi.org/10.1016/j.xpro.2022.101491.
+
+
+---
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Checking Dependencies](#checking-dependencies)
+  - [Obtain ArchRProject Peak Matrix](#obtain-archrproject-peak-matrix)
+  - [Extract Annotation](#extract-annotation)
+  - [Convert ArchRProject to Signac SeuratObject](#convert-archrproject-to-signac-seuratobject)
+  - [Transfer Gene Score Matrix](#transfer-gene-score-matrix)
+  - [Transfer Dimension Reduction](#transfer-dimension-reduction)
+
 
 ---
 
@@ -67,25 +85,28 @@ if (!requireNamespace("stringr", quietly = TRUE)) install.packages("stringr")
 ```
 
 ---
-
 ## Usage
 
-* **STEP 0 - Check all required dependencies have been installed and load them automatically.**
-
+### Checking Dependencies
+  - STEP 0: Check all required dependencies have been installed and load them automatically
+    
 ```r
 packages <- c("ArchR","Seurat", "Signac","stringr") # required packages
 loadinglibrary(packages)
 
 ```
 
-* **STEP 1 - Obtain ArchRProject peak matrix for object conversion.**
+
+### Obtain ArchRProject Peak Matrix
+  - STEP 1 - Obtain ArchRProject peak matrix for object conversion.
 
 ```r
 pkm <- getPeakMatrix(proj) # proj is an ArchRProject
 
 ```
 
-* **STEP 2 - Extract appropriate Ensembl gene annotation and convert to UCSC style.**
+### Extract Annotation
+  - STEP 2 - Extract appropriate Ensembl gene annotation and convert to UCSC style.
 
 ```r
 library(EnsDb.Hsapiens.v86) # Ensembl database to convert to human hg38. Install what is appropriate for your analysis
@@ -94,10 +115,18 @@ annotations <- getAnnotation(reference = EnsDb.Hsapiens.v86, refversion = "hg38"
 
 ```
 
-* **STEP 3 - Convert ArchRProject to Signac SeuratObject.**
+### Convert ArchRProject to Signac SeuratObject
+  - STEP 3 - Convert ArchRProject to Signac SeuratObject.
 
-****STEP 3 Option1: Fragments Files using for `fragments_fromcellranger` from 10X Genomics Cellranger ATAC output
+**STEP 3 Option1**: Fragments Files using for `fragments_fromcellranger` from 10X Genomics Cellranger ATAC output
+Option 1 is designed for the saving format exactly like output from the pipeline run by 10X Genomics Cellranger ATAC
 
+**IF** you have 10X output **but either format or PATH is not standard from direct output of 10X pipeline**, please use and click Option 2 in the following link
+
+<details>
+  <summary>Click to reveal STEP 3 Option1 code</summary>
+
+<!-- Your hidden code here -->
 Please select Yes for `fragments_fromcellranger`. Example `fragments_fromcellranger = "Yes"`
 
 ```r
@@ -126,6 +155,7 @@ fragments_dirs <- list(
   "/path/to/sample3/cellranger/output"
 )
 
+
 # # Optional: when fragments_fromcellranger = "NO", please set the file extension for the fragments file
 # fragments_file_extension <- ".fragments.tsv.gz"
 
@@ -141,11 +171,18 @@ SeuratObject <- ArchR2Signac(
 )
 
 ```
-****STEP 3 Option2: Fragments Files using for `fragments_fromcellranger` from **NON** Cellranger ATAC output or even from Cellranger ATAC output but don't match the standard output PATH from Cellranger ATAC `cellranger-atac count`, ie: SnapATAC tools
+</details>
+
+**STEP 3 Option2**: Fragments Files using for `fragments_fromcellranger` from **NON** Cellranger ATAC output or even from Cellranger ATAC output but don't match the standard output PATH from Cellranger ATAC `cellranger-atac count`, ie: SnapATAC tools
 
 Please select No for `fragments_fromcellranger`. Example `fragments_fromcellranger = "NO"`, Also remember to provide the `fragments_file_extension`, for example `fragments_fromcellranger = '.tsv.gz'` or `fragments_fromcellranger = '.fragments.tsv.gz'`.
 
 Option2a: Provide only one main `fragments_dir`
+
+<details>
+  <summary>Click to reveal STEP 3 Option2a code</summary>
+
+<!-- Your hidden code here -->
 ```
 #For eample, Fragments files in the folder HemeFragments, which we can check them in terminal
 ### in Linux ###
@@ -160,6 +197,7 @@ tree /ArchR/HemeFragments/
 └── scATAC_PBMC_R1.fragments.tsv.gz.tbi
 ##################
 ```
+
 ** **Possible issue** due to the fragments format if fragments files are not from cellranger actac out:
 Reported in [#Issue3](https://github.com/swaruplabUCI/ArchRtoSignac/issues/3)
 Please check out: Signac snATAC-seq fragment file [Format](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/output/fragments)
@@ -190,8 +228,12 @@ seurat_atac <- ArchR2Signac(
   annotation = annotations
 )
 ```
+</details>
 
 Option2b: Provide only one list of `fragments_dirs`
+
+<details>
+  <summary>Click to reveal STEP 3 Option2b code</summary>
 
 ```r
 ## OR providing a fragments list but leave the fragments file extension out (use the 'fragments_file_extension' for the fragments extension)
@@ -213,9 +255,15 @@ SeuratObject <- ArchR2Signac(
   annotation = annotations
 )
 ```
+</details>
+
 Option2c: Provide only one list `fragments_dirs` but make changes to the arguments that supplied for the 'fragments_file_extension'
 This option is used for cellranger output fragments.tsv.gz but doesn't match the standard output path style.
 ie, your fragments file looking like this:
+
+<details>
+  <summary>Click to reveal STEP 3 Option2c code</summary>
+
 ```
 ls
 /ArchR/HemeFragments/scATAC_BMMC_R1/fragments.tsv.gz
@@ -245,8 +293,11 @@ SeuratObject <- ArchR2Signac(
 
 
 ```
+</details>
 
-* **STEP 4 - Transfer ArchRProject gene score matrix to Signac SeuratObject.**
+
+### Transfer Gene Score Matrix
+  - STEP 4 - Transfer ArchRProject gene score matrix to Signac SeuratObject.
 
 ```r
 gsm <- getGeneScoreMatrix(ArchRProject = proj, SeuratObject = seurat_atac)
@@ -255,7 +306,8 @@ seurat_atac[['RNA']] <- CreateAssayObject(counts = gsm)
 
 ```
 
-* **STEP 5 - Transfer ArchRProject dimension reduction ("IterativeLSI", "IterativeLSI2" or "Harmony") and UMAP to Signac SeuratObject.**
+### Transfer Dimension Reduction
+  - STEP 5 - Transfer ArchRProject dimension reduction ("IterativeLSI", "IterativeLSI2" or "Harmony") and UMAP to Signac SeuratObject.
 
 ```r
 seurat_atac <- addDimRed(
@@ -276,11 +328,17 @@ seurat_atac <- addTwoDimRed(
 )
 
 #add Customized named dimension reduction - from reducedDims and reducedDimsType -- 'Harmony' or 'IterativeLSI':
-seurat_atac <- addCustomizeDimRed(ArchRProject = proj3, SeuratObject = seurat_atac, addUMAPs = "UMAP", reducedDims = 'IterativeLSI', reducedDimsType = 'IterativeLSI')
-[1] "In Progress:"
-[1] "add UMAP From ArchRProject to SeuratObject"
-[1] "In Progress:"
-[1] "add reduction From ArchRProject to SeuratObject"
-[1] "Return SeuratObject"
+seurat_atac <- addCustomizeDimRed(
+  ArchRProject = proj3,
+  SeuratObject = seurat_atac,
+  addUMAPs = "UMAP",
+  reducedDims = 'IterativeLSI',
+  reducedDimsType = 'IterativeLSI'
+)
+#[1] "In Progress:"
+#[1] "add UMAP From ArchRProject to SeuratObject"
+#[1] "In Progress:"
+#[1] "add reduction From ArchRProject to SeuratObject"
+#[1] "Return SeuratObject"
 
 ```
