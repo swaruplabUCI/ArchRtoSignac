@@ -318,6 +318,8 @@ seurat_atac <- addDimRed(
   reducedDims = "IterativeLSI"
 ) # default is "IterativeLSI"
 
+# OR
+
 #add both 'Harmony' and ‘IterativeLSI’:
 seurat_atac <- addTwoDimRed(
   ArchRProject = proj,
@@ -327,6 +329,8 @@ seurat_atac <- addTwoDimRed(
        # Please limit your reducedDims to one of the following: IterativeLSI, IterativeLSI2 or Harmony
   reducedDims2 = "Harmony" # IterativeLSI2 or Harmony
 )
+
+# OR
 
 #add Customized named dimension reduction - from reducedDims and reducedDimsType -- 'Harmony' or 'IterativeLSI':
 seurat_atac <- addCustomizeDimRed(
