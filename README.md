@@ -1,4 +1,4 @@
-# ArchRtoSignac : an Object Conversion Package for ArchR to Signac
+# ArchRtoSignac : an Object Conversion Package for ArchR to Signac <img src="images/logo.png" align="right" height="30%" width="30%" />
 
 [![DOI](https://zenodo.org/badge/473458154.svg)](https://zenodo.org/badge/latestdoi/473458154)
 [![version](https://img.shields.io/badge/version-1.0.4-red.svg)](https://semver.org)
