@@ -1,11 +1,11 @@
 # ArchRtoSignac : an Object Conversion Package for ArchR to Signac <img src="images/logo.png" align="right" height="30%" width="30%" />
 
 [![DOI](https://zenodo.org/badge/473458154.svg)](https://zenodo.org/badge/latestdoi/473458154)
-[![version](https://img.shields.io/badge/version-1.0.4-red.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-1.0.5-red.svg)](https://semver.org)
 [![Open Issues](https://img.shields.io/github/issues-raw/swaruplabUCI/ArchRtoSignac?label=open%20issues&color=yellow)](https://github.com/swaruplabUCI/ArchRtoSignac/issues)
 [![Closed Issues](https://img.shields.io/github/issues-closed-raw/swaruplabUCI/ArchRtoSignac?label=closed%20issues&color=green)](https://github.com/swaruplabUCI/ArchRtoSignac/issues?q=is%3Aissue+is%3Aclosed)
 
-**NOTE**: Please **update** the package from version 1.0.3 to **1.0.4** to fix a possible object merging error
+**NOTE**: Please **update** the package from version 1.0.3 to **1.0.5** to fix a possible object merging error
 
 **ArchRtoSignac** is an R package to convert an ArchRProject [(ArchR)](https://www.archrproject.com/index.html) to a Signac SeuratObject [(Signac)](https://satijalab.org/signac/index.html).
 
@@ -89,7 +89,7 @@ if (!requireNamespace("stringr", quietly = TRUE)) install.packages("stringr")
 
 ### Checking Dependencies
   - STEP 0: Check all required dependencies have been installed and load them automatically
-    
+
 ```r
 packages <- c("ArchR","Seurat", "Signac","stringr") # required packages
 loadinglibrary(packages)
@@ -145,11 +145,11 @@ seurat_atac <- ArchR2Signac(
   annotation = annotations # annotation from getAnnotation()
 )
 
-# Option 1b: Set a list of directories containing the cellranger output for each sample 
+# Option 1b: Set a list of directories containing the cellranger output for each sample
 # (this newly added code to take in a list of fragments' path work both for fragments from cellranger and fragments not from cellranger, and when fragments are not from cellranger, please provide fragments_file_extension)
 #
-# Also PLEASE MAKE SURE the order of the fragment_dirs for samples have the same order as samplelist 
-# or the order of list from ArchRProject@cellColData$Sample 
+# Also PLEASE MAKE SURE the order of the fragment_dirs for samples have the same order as samplelist
+# or the order of list from ArchRProject@cellColData$Sample
 fragments_dirs <- list(
   "/path/to/sample1/cellranger/output",
   "/path/to/sample2/cellranger/output",
