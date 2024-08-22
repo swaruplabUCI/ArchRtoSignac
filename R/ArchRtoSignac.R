@@ -123,7 +123,7 @@ ArchR2Signac <- function(
                                paste0(fragments_dir, cur_sample, output_dir, 'fragments.tsv.gz'))
 
        # seeking the pattern matched in colnames(pm); metadata of the corresponding sample
-       cur_pm <- pm[,grepl(paste0(cur_sample, '#'), colnames(pm))]
+       cur_pm <- pm[,grepl(paste0('^',cur_sample, "#"), colnames(pm))]
        cur_meta <- ArchRProject@cellColData %>% as.data.frame %>% subset(Sample == cur_sample)
 
        # change colnames and rowname format:
@@ -163,7 +163,7 @@ ArchR2Signac <- function(
                         paste0(fragments_dir[[which(samples == cur_sample)]], fragments_file_extension),
                         paste0(fragments_dir, cur_sample, fragments_file_extension))
        # seeking the pattern matched in colnames(pm); metadata of the corresponding sample
-       cur_pm <- pm[,grepl(paste0(cur_sample, '#'), colnames(pm))]
+       cur_pm <- pm[,grepl(paste0('^',cur_sample, "#"), colnames(pm))]
        cur_meta <- ArchRProject@cellColData %>% as.data.frame %>% subset(Sample == cur_sample)
 
        # change colnames and rowname format:
@@ -347,7 +347,7 @@ addDimRed <- function(
 #' @param ArchRProject An ArchRProject
 #' @param SeuratObject A Seurat object
 #' @param addUMAPs  add UMAPs of the selected UMAPs
-#' @param reducedDims the selected dimension reduction to be transfered from ArchRProject to Signac SeuratObject 
+#' @param reducedDims the selected dimension reduction to be transfered from ArchRProject to Signac SeuratObject
 #' @param reducedDimsType 'Harmony' or 'IterativeLSI', this parameter tells the type of the reduced dimension (default is 'IterativeLSI')
 #' @export
 #' @examples
@@ -364,19 +364,19 @@ addCustomizeDimRed <- function(
   umap_df <- ArchRProject@embeddings[[addUMAPs]]$df %>% as.matrix
   rownames(umap_df) <- colnames(SeuratObject) # make the rowname the same format as seurat
   colnames(umap_df) <- c('UMAP_1', 'UMAP_2')
-  
+
   SeuratObject@reductions$umap <- Seurat::CreateDimReducObject(
     embeddings=umap_df,
     assay="peaks"
   )
-  
+
   print("In Progress:")
   print("add reduction From ArchRProject to SeuratObject")
   if(reducedDimsType == 'Harmony'){
     harmony_matrix <- ArchRProject@reducedDims[[reducedDims]][[1]]
     rownames(harmony_matrix) <- colnames(SeuratObject)
     colnames(harmony_matrix) <- paste0('LSI_', 1:ncol(harmony_matrix))
-    
+
     SeuratObject@reductions$harmony <- Seurat::CreateDimReducObject(
       embeddings=harmony_matrix,
       assay="peaks"
@@ -385,7 +385,7 @@ addCustomizeDimRed <- function(
     LSI_matrix <- ArchRProject@reducedDims[[reducedDims]][[1]]
     rownames(LSI_matrix) <- colnames(SeuratObject)
     colnames(LSI_matrix) <- paste0('LSI_', 1:ncol(LSI_matrix))
-    
+
     SeuratObject@reductions$IterativeLSI <- Seurat::CreateDimReducObject(
       embeddings=LSI_matrix,
       assay="peaks"
@@ -393,10 +393,10 @@ addCustomizeDimRed <- function(
   } else {
     stop("Unsupported reduced dimension type, only 'Harmony' and 'IterativeLSI' are supported.")
   }
-  
+
   print("Return SeuratObject")
   SeuratObject
-  
+
 }
 
 #' addTwoDimRed
